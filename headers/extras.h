@@ -23,12 +23,14 @@ void mostrar_menu(void) ;
 // Espera que el input del usuario sea un ENTER (salto de línea) para continuar.
 void esperar_enter(void) ;
 // (Magnus Opus) Imprime un mensaje con un separador automático.
-void imprimir_separador(const char*) ;
+void imprimir_separador(const char*, const int) ;
 // Lee lo que el usuario ingrese y modifica un string.
 void leer_entrada(char*) ;
 // Lee lo que el usuario ingrese, pero asigna sólo el primer carácter a una opción.
 void leer_opcion(char*) ;
 
 void leer_escenarios(void);
+
+void sleep_ms(int);
 
 #endif
