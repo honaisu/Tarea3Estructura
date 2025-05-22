@@ -1,31 +1,59 @@
 #include "headers/graphquest.h"
 
-void pantalla_carga() {
-    for (int i = 0; i < 50; i++) {
-        limpiar_pantalla();
-        printf("\033[?25l\033[37m[");
-        for (int j = 0; j < i; j++) printf("#");
-        for (int j = i; j < 50; j++) printf(" ");
-        printf("]");
-        fflush(stdout);
-        printf("\033[0m\033[?25h");
-        sleep_ms(120);
-    }
+// Simple: gcc main.c headers/*.c -o main
+
+// Debug: gcc -g main.c headers/*.c -o main
+
+void pantalla_inicio(char*, Map*);
+void jugar_juego(Map*);
+void pantalla_jugador(void);
+
+void pantalla_inicio(char* verificador_juego, Map* mapa_juego) {
+    char o;
+    do {
+        mostrar_menu_principal();
+        leer_opcion(&o);
+        switch (o) {
+            case '1': { leer_escenarios(mapa_juego); break; }
+            case '2': { *verificador_juego = 'b'; break; }
+            // Dato default
+            case '0': { puts("Saliendo del programa..."); break; }
+            // Respuesta predeterminada
+            default: puts("Por favor, elija una opción"); 
+        }
+        if (o != '0') esperar_enter(); 
+    } while (o != '0' && o != '2');
 }
 
-void pantalla_inicio() {
+void pantalla_jugador() {
     char o;
-    mostrar_menu_principal();
     leer_opcion(&o);
-    switch (o) {
-        case '1': { leer_escenarios(); esperar_enter(); break; }
-        case '0': { return;}
-    }
+
+    do {
+        switch (o) {
+            case '1': { esperar_enter(); break; }
+            case '2': { break; }
+            // Dato default
+            case '0': { puts("Saliendo del programa..."); break; }
+            // Respuesta predeterminada
+            default: puts("Por favor, elija una opción"); 
+        }
+    } while (o != '0');
+}
+
+void jugar_juego(Map* mapa_juego) {
+    limpiar_pantalla();
+    puts("hola mundo");
+    return;
 }
 
 int main() {
-    pantalla_carga();
-    pantalla_inicio();
+    Map* grafo_del_juego = map_create(is_equal_int);
+    char iniciar_juego = '0';
+    limpiar_pantalla();
+    esperar_enter();
+    pantalla_inicio(&iniciar_juego, grafo_del_juego);
+    (iniciar_juego != '0') ? jugar_juego(grafo_del_juego) : 0;
 
     limpiar_pantalla();
     return 0;

@@ -1,6 +1,7 @@
 #ifndef EXTRAS_H
 #define EXTRAS_H
 #include "list.h"
+#include "map.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +15,8 @@ List *split_string(const char*, const char*) ;
 char** leer_linea_csv(FILE*, char) ;
 // Compara strings, y da un resultado si es que comprueba si es igual o no. Función útil para la creación de mapas.
 int is_equal_str(void*, void*) ;
+
+int is_equal_int(void*, void*);
 
 //--- Funciones propias: ---//
 // Optimizado para funcionar en otros OS. Limpia el contenido mostrado en la terminal.
@@ -29,8 +32,5 @@ void leer_entrada(char*) ;
 // Lee lo que el usuario ingrese, pero asigna sólo el primer carácter a una opción.
 void leer_opcion(char*) ;
 
-void leer_escenarios(void);
-
-void sleep_ms(int);
 
 #endif

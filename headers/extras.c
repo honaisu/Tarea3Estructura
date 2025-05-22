@@ -1,9 +1,4 @@
 #include "extras.h"
-#ifdef _WIN32
-  #include <windows.h>
-#else
-  #include <unistd.h>
-#endif
 
 #define MAX_LINE_LENGTH 1024
 #define MAX_FIELDS 300
@@ -108,6 +103,14 @@ void esperar_enter() {
     while (getchar() != '\n');
 }
 
+int is_equal_str(void *key1, void *key2) {
+  return strcmp((char *)key1, (char *)key2) == 0;
+}
+
+int is_equal_int(void *key1, void *key2) {
+  return *(int *)key1 == *(int *)key2; // Compara valores enteros directamente
+}
+
 void leer_entrada(char* string) {
     char temporal[200];
     fgets(temporal, sizeof(temporal), stdin);
@@ -123,12 +126,4 @@ void leer_opcion(char* opcion) {
   char temporal[200];
   leer_entrada(temporal);
   sscanf(temporal, "%c", opcion); 
-}
-
-void sleep_ms(int milisegundos) {
-  #ifdef _WIN32
-    Sleep(milisegundos);
-  #else
-    usleep(milisegundos * 1000);
-  #endif
 }
