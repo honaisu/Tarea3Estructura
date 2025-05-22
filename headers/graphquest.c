@@ -1,10 +1,16 @@
 #include "graphquest.h"
 
-void leer_escenarios(Map* mapa_juego) {
+#define LEER_CAMPOS campos = leer_linea_csv(archivo, ',')
+
+State_Map* guardar_estado() {
+  
+}
+
+void leer_mapa_completo(Map* mapa_juego) {
   FILE *archivo = fopen("data/graphquest.csv", "r");
   if (archivo == NULL) { perror("Error al abrir el archivo"); return; }
   
-  char** campos = leer_linea_csv(archivo, ',');
+  char** LEER_CAMPOS;
 
   while ((campos = leer_linea_csv(archivo, ',')) != NULL) {
     State_Map* nuevo_nodo = (State_Map*) malloc(sizeof(State_Map));
@@ -17,7 +23,10 @@ void leer_escenarios(Map* mapa_juego) {
 
     map_insert(mapa_juego, key, nuevo_nodo);
     // Nombre campos[1]
+
     nuevo_nodo->nombre = campos[1];
+    
+    printf("ID: %d | Dirección: %p\nNOMBRE: %s\n", nuevo_nodo->ID, key, nuevo_nodo->nombre);
     // Descripción campos[2]
     nuevo_nodo->descripcion = campos[2];
     // Items campos[3]
@@ -39,13 +48,9 @@ void leer_escenarios(Map* mapa_juego) {
     }
 
     // Arriba campos[4] ; Abajo campos[5] ; Izquierda campos[6] ; Derecha campos[7]
-    for (int i = 4; i < 8; i++) {
-      int direccion = atoi(campos[i]);
-      if (direccion < 0) continue;
-      printf("%d ", direccion);
-      int* adjacente = (int*) malloc(sizeof(int));
-      *adjacente = direccion;
-      list_pushBack(nuevo_nodo->adj_nodes, adjacente);
+    for (int i = 0; i < 4; i++) {
+      int direccion = atoi(campos[i + 4]);
+      nuevo_nodo->direcciones[i] = direccion;
     }
 
     nuevo_nodo->final = *campos[8];
@@ -54,6 +59,7 @@ void leer_escenarios(Map* mapa_juego) {
     list_clean(items);
     free(items); 
   }
+
   fclose(archivo); // Cierra el archivo después de leer todas las líneas
   return;
 }

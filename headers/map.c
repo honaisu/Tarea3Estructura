@@ -50,8 +50,10 @@ void multimap_insert(Map *map, void *key, void *value) {
 }
 
 void map_insert(Map *map, void *key, void *value) {
-  if (map_search(map, key) != NULL) return;
-  multimap_insert(map, key, value);
+  MapPair* search = map_search(map, key);
+  if (search != NULL) { // Reemplazar el dato existente con el actual (me sirve en el código principal)
+    search->value = value;
+  } else multimap_insert(map, key, value);
 }
 
 int _is_equal(Map *map, MapPair *pair, void *key) {

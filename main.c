@@ -14,7 +14,7 @@ void pantalla_inicio(char* verificador_juego, Map* mapa_juego) {
         mostrar_menu_principal();
         leer_opcion(&o);
         switch (o) {
-            case '1': { leer_escenarios(mapa_juego); break; }
+            case '1': { leer_mapa_completo(mapa_juego); break; }
             case '2': { *verificador_juego = 'b'; break; }
             // Dato default
             case '0': { puts("Saliendo del programa..."); break; }

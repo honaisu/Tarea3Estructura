@@ -13,11 +13,18 @@ typedef struct {
     char* nombre;
     char* descripcion;
     List* items;
+    int direcciones[4];
     List* adj_nodes;
     char final;
 } State_Map;
 
-void leer_escenarios(Map* );
+typedef struct {
+  List* items;
+  State_Map* sala_actual;
+  int tiempo;
+} Player;
+
+void leer_mapa_completo(Map*);
 void mostrar_menu_principal();
 
 #endif
