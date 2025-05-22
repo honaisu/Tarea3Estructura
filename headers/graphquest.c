@@ -1,66 +1,85 @@
 #include "graphquest.h"
 
-#define LEER_CAMPOS campos = leer_linea_csv(archivo, ',')
+#define LEER_CAMPO campos = leer_linea_csv(archivo, ',')
+#define CADA_CAMPO LEER_CAMPO; campos != NULL; LEER_CAMPO
+#define CADA_ITEM  char* item = list_first(items); item != NULL; item = list_next(items)
 
-State_Map* guardar_estado() {
+void guardar_items(State_Map* nodo, char** campos){
+  List* items = split_string(campos[3], ";");
+  nodo->items = list_create();
+  for(CADA_ITEM){
+      List* values = split_string(item, ",");
+
+      Item* nuevo_item = (Item*) malloc(sizeof(Item));
+      nuevo_item->nombre = list_first(values);
+      nuevo_item->valor = atoi(list_next(values));
+      nuevo_item->peso = atoi(list_next(values));
+      list_pushBack(nodo->items, nuevo_item);
+
+      list_clean(values);
+      free(values);
+  }
+
+  list_clean(items);
+  free(items); 
+}
+
+void guardar_direcciones(State_Map* nodo, char** campos) {
+  // Arriba campos[4] ; Abajo campos[5] ; Izquierda campos[6] ; Derecha campos[7]
+  for (int i = 0; i < 4; i++) {
+    int direccion = atoi(campos[i + 4]);
+    nodo->direcciones[i] = direccion;
+  }
+}
+
+State_Map* crear_estado(char** campos) {
+  State_Map* nuevo_nodo = (State_Map*) malloc(sizeof(State_Map));
+  if (nuevo_nodo == NULL) { perror("No se pudo crear el nodo"); return NULL; }
   
+  nuevo_nodo->ID = atoi(campos[0]);
+  nuevo_nodo->nombre = strdup(campos[1]);
+  nuevo_nodo->descripcion = strdup(campos[2]);
+  guardar_items(nuevo_nodo, campos);
+  guardar_direcciones(nuevo_nodo, campos);
+  nuevo_nodo->final = *campos[8];
+
+  return nuevo_nodo;
+}
+
+void mostrar_items(const List* items) {
+  
+}
+
+void mostrar_datos(const State_Map* estado) {
+  printf("ID: %d\n", estado->ID);
+  printf("NOMBRE: %s\n", estado->nombre);
+  printf("DESCRIPCION: %s\n", estado->descripcion);
+  mostrar_items(estado->items);
+  printf("ES FINAL?: %c\n", estado->final);
 }
 
 void leer_mapa_completo(Map* mapa_juego) {
   FILE *archivo = fopen("data/graphquest.csv", "r");
   if (archivo == NULL) { perror("Error al abrir el archivo"); return; }
   
-  char** LEER_CAMPOS;
-
-  while ((campos = leer_linea_csv(archivo, ',')) != NULL) {
-    State_Map* nuevo_nodo = (State_Map*) malloc(sizeof(State_Map));
-    if (nuevo_nodo == NULL) { perror("No se pudo crear el nodo"); break; }
-    // ID atoi(campos[0])
-    nuevo_nodo->ID = atoi(campos[0]);
-
+  char** LEER_CAMPO;
+  for(CADA_CAMPO) {
+    State_Map* nuevo_nodo = crear_estado(campos);
+    if (nuevo_nodo == NULL) continue;
     int* key = (int*) malloc(sizeof(int)); 
     *key = nuevo_nodo->ID;
-
     map_insert(mapa_juego, key, nuevo_nodo);
-    // Nombre campos[1]
-
-    nuevo_nodo->nombre = campos[1];
-    
-    printf("ID: %d | Dirección: %p\nNOMBRE: %s\n", nuevo_nodo->ID, key, nuevo_nodo->nombre);
-    // Descripción campos[2]
-    nuevo_nodo->descripcion = campos[2];
-    // Items campos[3]
-    List* items = split_string(campos[3], ";");
-    nuevo_nodo->items = list_create();
-    for(char* item = list_first(items); item != NULL; item = list_next(items)){
-        List* values = split_string(item, ",");
-        Item* nuevo_item = (Item*) malloc(sizeof(Item));
-
-        nuevo_item->nombre = list_first(values);
-        nuevo_item->valor = atoi(list_next(values));
-        nuevo_item->peso = atoi(list_next(values));
-    
-        printf("  - %s (%d pts, %d kg)\n", nuevo_item->nombre, nuevo_item->valor, nuevo_item->peso);
-
-        list_pushBack(nuevo_nodo->items, nuevo_item);
-        list_clean(values);
-        free(values);
-    }
-
-    // Arriba campos[4] ; Abajo campos[5] ; Izquierda campos[6] ; Derecha campos[7]
-    for (int i = 0; i < 4; i++) {
-      int direccion = atoi(campos[i + 4]);
-      nuevo_nodo->direcciones[i] = direccion;
-    }
-
-    nuevo_nodo->final = *campos[8];
-    if (nuevo_nodo->final == 'N') printf("No es final\n");
-
-    list_clean(items);
-    free(items); 
   }
 
-  fclose(archivo); // Cierra el archivo después de leer todas las líneas
+  MapPair* first = map_first(mapa_juego);
+  while (first != NULL) {
+    printf("Llave: %p\nCada dato\n", first->key);
+    mostrar_datos(first->value);
+    first = map_next(mapa_juego);
+    putchar('\n');
+  }
+
+  fclose(archivo);
   return;
 }
 
