@@ -14,8 +14,7 @@
 
 <details>
 <summary> <b> Mapa del Juego (Spoilers)</b> </summary>
-
-<div align="center">
+<div align="center"> <br/>
 
 | Entrada Principal | Librería | Caverna Oscura  | Estudio |
 |:-----------------:|:--------:|:---------------:|:-------:|
@@ -24,9 +23,7 @@
 | Dormitorio        | Corredor | Cámara Secreta  | Salida  |
 
 </div>
-</details>
-
-<br/>
+</details> 
 
 ### Requerimientos
 - Tener un compilador de C (como **gcc**) instalado.
