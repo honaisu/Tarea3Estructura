@@ -4,18 +4,18 @@
 
 // Debug: gcc -g main.c headers/*.c -o main
 
-void pantalla_inicio(char*, Map*);
+void pantalla_inicio(Map*);
 void jugar_juego(Map*);
 void pantalla_jugador(void);
 
-void pantalla_inicio(char* verificador_juego, Map* mapa_juego) {
+void pantalla_inicio(Map* mapa_juego) {
     char o;
     do {
         mostrar_menu_principal();
         leer_opcion(&o);
         switch (o) {
             case '1': { leer_mapa_completo(mapa_juego); break; }
-            case '2': { *verificador_juego = 'b'; break; }
+            case '2': { jugar_juego(mapa_juego); break; }
             // Dato default
             case '0': { puts("Saliendo del programa..."); break; }
             // Respuesta predeterminada
@@ -49,11 +49,9 @@ void jugar_juego(Map* mapa_juego) {
 
 int main() {
     Map* grafo_del_juego = map_create(is_equal_int);
-    char iniciar_juego = '0';
     limpiar_pantalla();
     esperar_enter();
-    pantalla_inicio(&iniciar_juego, grafo_del_juego);
-    (iniciar_juego != '0') ? jugar_juego(grafo_del_juego) : 0;
+    pantalla_inicio(grafo_del_juego);
 
     limpiar_pantalla();
     return 0;
