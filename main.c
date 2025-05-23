@@ -1,8 +1,13 @@
-#include "headers/graphquest.h"
+#include "headers/gameset.h"
 
 // Simple: gcc main.c headers/*.c -o main
 
 // Debug: gcc -g main.c headers/*.c -o main
+
+#define ES_OPCION_VALIDA (o != '0')
+
+extern unsigned short es_juego;
+extern unsigned short mapa_cargado; 
 
 void pantalla_inicio(Map*);
 void jugar_juego(Map*);
@@ -21,38 +26,14 @@ void pantalla_inicio(Map* mapa_juego) {
             // Respuesta predeterminada
             default: puts("Por favor, elija una opción"); 
         }
-        if (o != '0') esperar_enter(); 
-    } while (o != '0' && o != '2');
-}
-
-void pantalla_jugador() {
-    char o;
-    leer_opcion(&o);
-
-    do {
-        switch (o) {
-            case '1': { esperar_enter(); break; }
-            case '2': { break; }
-            // Dato default
-            case '0': { puts("Saliendo del programa..."); break; }
-            // Respuesta predeterminada
-            default: puts("Por favor, elija una opción"); 
-        }
-    } while (o != '0');
-}
-
-void jugar_juego(Map* mapa_juego) {
-    limpiar_pantalla();
-    puts("hola mundo");
-    return;
+        if (ES_OPCION_VALIDA) esperar_enter(); 
+    } while (ES_OPCION_VALIDA);
 }
 
 int main() {
-    Map* grafo_del_juego = map_create(is_equal_int);
+    Map* grafo_del_juego = map_create(is_equal_str);
     limpiar_pantalla();
     esperar_enter();
     pantalla_inicio(grafo_del_juego);
-
-    limpiar_pantalla();
     return 0;
 }
