@@ -31,13 +31,13 @@
 ### Compilación y ejecución
 <details>
 <summary>
-Para compilarlo, dentro del sistema operativo <b>Windows</b> usando <b>Visual Studio Code</b>:</summary>
+Para compilarlo, dentro del sistema operativo <b>Windows</b> usando <b>Visual Studio Code</b>: </summary>
 
 1. Descargar este **repositorio** como archivo `zip` (haciendo **click** en la sección `code`, y apretando el botón de `Descargar ZIP`).
 2. Abrir el **explorador de archivos** y navegar hasta el archivo `zip` para descomprimirlo. Una vez descomprimido, abrir el directorio con los archivos del programa.
 3. Abrir el archivo `main.c` del `zip` en **Visual Studio Code**.
 4. Dentro de **Visual Studio Code**, abrir el **terminal** y dirigirse a la dirección del repositorio, para poder compilar el programa.
-5. Ejecutar el siguiente comando: `gcc TDAs/*.c *.c -o programa.exe`.
+5. Ejecutar el siguiente comando: `gcc headers/*.c *.c -o programa.exe`.
 6. Abrir el archivo `programa.exe`, o escribir la línea `./programa.exe` en **Visual Studio Code** para ejecutarlo.
 </details>
 
@@ -52,7 +52,7 @@ Una forma alternativa de compilación, funcional para <b>Windows</b> y <b>Linux<
 
     - En **Windows**, se puede hacer **click derecho** en el directorio para abrir el menú de opciones y seleccionar para **abrir en Terminal**. Alternativamente, abrir **PowerShell** o **Línea de Comandos**, copiar la dirección del repositorio (la ruta `C:\Users\...`) y ejecutar el comando `cd "C:\Users\..."`.
     - En **Linux**, se puede ejecutar, dentro de la **terminal** de su preferencia, el comando `cd`, similar a como se hace en **Windows**. Es necesario copiar la dirección del repositorio (la ruta `"/home/$USER/..."`) y ejecutar el comando `cd "/home/$USER/..."` para acceder a la ruta del programa.
-4. Ejecutar el comando: `gcc TDAs/*.c *.c -o programa`.
+4. Ejecutar el comando: `gcc headers/*.c *.c -o programa`.
 5. Escribir en la misma **terminal** el comando `./programa` para ejecutar la aplicación.
 </details>
 
