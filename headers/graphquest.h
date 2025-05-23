@@ -2,13 +2,17 @@
 #define GRAPHQUEST_H
 #include "extras.h"
 
-typedef struct {
+#define CADA_RECORRIDO(valor, lista) valor = list_first(lista); valor != NULL; valor = list_next(lista)
+
+extern unsigned short mapa_cargado; 
+
+typedef struct Item{
   char* nombre;
   int valor;
   int peso;
 } Item;
 
-typedef struct {
+typedef struct State_Map{
     int ID;
     char* nombre;
     char* descripcion;
@@ -18,13 +22,6 @@ typedef struct {
     char final;
 } State_Map;
 
-typedef struct {
-  List* items;
-  State_Map* sala_actual;
-  int tiempo;
-} Player;
-
 void leer_mapa_completo(Map*);
-void mostrar_menu_principal();
 
 #endif

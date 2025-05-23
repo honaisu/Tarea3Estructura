@@ -1,15 +1,15 @@
 #include "extras.h"
 
-#define MAX_LINE_LENGTH 1024
-#define MAX_FIELDS 300
+#define MAX_LONGITUD_LINEA 1024
+#define MAX_CAMPOS 300
 
 char** leer_linea_csv(FILE *archivo, char separador) {
-    static char linea[MAX_LINE_LENGTH];
-    static char *campos[MAX_FIELDS];
+    static char linea[MAX_LONGITUD_LINEA];
+    static char *campos[MAX_CAMPOS];
     char *ptr, *start;
     int idx = 0;
 
-    if (fgets(linea, MAX_LINE_LENGTH, archivo) == NULL) {
+    if (fgets(linea, MAX_LONGITUD_LINEA, archivo) == NULL) {
         return NULL; // No hay más líneas para leer
     }
 
@@ -18,7 +18,7 @@ char** leer_linea_csv(FILE *archivo, char separador) {
 
     ptr = start = linea;
     while (*ptr) {
-        if (idx >= MAX_FIELDS - 1) break;
+        if (idx >= MAX_CAMPOS - 1) break;
 
         if (*ptr == '\"') { // Inicio de un campo entrecomillado
             start = ++ptr;    // Saltar la comilla inicial
@@ -83,7 +83,7 @@ void limpiar_pantalla() {
 }
 
 void imprimir_separador(const char* mensaje, const int delimitador) {
-  for (int i = 0; i < delimitador; i++) printf("\033[37m=");
+  for (int i = 0; i < delimitador; i++) printf("\033[1;37m=");
   putchar('\n');
    
   int longitud_mensaje = strlen(mensaje);
@@ -103,12 +103,12 @@ void esperar_enter() {
     while (getchar() != '\n');
 }
 
-int is_equal_str(void *key1, void *key2) {
-  return strcmp((char *)key1, (char *)key2) == 0;
+int is_equal_int(void *key1, void *key2) {
+  return *(int *)key1 == *(int *)key2;
 }
 
-int is_equal_int(void *key1, void *key2) {
-  return *(int *)key1 == *(int *)key2; // Compara valores enteros directamente
+int is_equal_str(void *key1, void *key2) {
+  return strcmp((char *)key1, (char *)key2) == 0 ;
 }
 
 void leer_entrada(char* string) {

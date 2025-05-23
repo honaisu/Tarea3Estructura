@@ -13,16 +13,14 @@
 List *split_string(const char*, const char*) ;
 // Agarra un archivo, y por cada línea que pasa va leyendo su contenido. Lo devuelve en formato de doble puntero a char (lista de strings).
 char** leer_linea_csv(FILE*, char) ;
-// Compara strings, y da un resultado si es que comprueba si es igual o no. Función útil para la creación de mapas.
-int is_equal_str(void*, void*) ;
-
+// Compara enteros, y da un resultado si es que comprueba si es igual o no. Función útil para la creación de mapas.
 int is_equal_int(void*, void*);
+
+int is_equal_str(void*, void*);
 
 //--- Funciones propias: ---//
 // Optimizado para funcionar en otros OS. Limpia el contenido mostrado en la terminal.
 void limpiar_pantalla(void) ;
-// Menú simple que muestra distintas opciones para elegir.
-void mostrar_menu(void) ;
 // Espera que el input del usuario sea un ENTER (salto de línea) para continuar.
 void esperar_enter(void) ;
 // (Magnus Opus) Imprime un mensaje con un separador automático.
