@@ -28,6 +28,11 @@
 
 <br/>
 
+### Requerimientos
+- Tener un compilador de C (como **gcc**) instalado.
+    - Para **Windows**, es recomendable utilizar **MinGW**.
+    - Para sistemas basados en **Arch Linux**, se puede ejecutar en la terminal el comando `sudo pacman -S gcc` para instalarlo de los **paquetes oficiales** de Arch.
+
 ### Compilación y ejecución
 <details>
 <summary>
