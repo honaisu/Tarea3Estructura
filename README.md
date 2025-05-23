@@ -5,12 +5,12 @@
     | ^  \       | |  __ _ __ __ _ _ __ | |__ | |  | |_   _  ___  ___| |_ 
     | -  | \o    | | |_ | '__/ _` | '_ \| '_ \| |  | | | | |/ _ \/ __| __|
      /\\ /       | |__| | | | (_| | |_) | | | | |__| | |_| |  __/\__ \ |_ 
-      |  |  ___   \_____|_|  \__,_| .__/|_| |_|\___\_\\__,_|\___||___/\__|
+      |  |  _o_   \_____|_|  \__,_| .__/|_| |_|\___\_\\__,_|\___||___/\__|
       |  | |___|                    |_|                                   
 ```
-<h1 style="text-align: center;"> <b> GraphQuest </b> </h1>
+# GraphQuest
 
-**GraphQuest** es una aventura. En esta aventura, controlarás a un **bandido perdido**.
+**GraphQuest** es una aventura. En esta aventura, aventurarás.
 
 <details>
 <summary> <b> Mapa del Juego (Spoilers)</b> </summary>
