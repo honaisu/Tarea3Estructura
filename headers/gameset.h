@@ -10,8 +10,6 @@ typedef struct Player{
   int peso_total;
 } Player;
 
-extern unsigned short es_juego;
-
 void jugar_juego(Map*);
 void mostrar_menu_principal(void);
 

@@ -1,8 +1,6 @@
 #include "gameset.h"
 #include "mostrar.h"
 
-unsigned short es_juego = 0;
-
 #define _TIEMPO 60
 #define VER_ESTADO(player) limpiar_pantalla(); mostrar_estado_actual(player, jugador->sala_actual)
 #define FORMULA_TIEMPO (jugador->peso_total + 1) * 0.1
@@ -126,8 +124,7 @@ Player* inicializar_jugador(void) {
 }
 
 void jugar_juego(Map* mapa_juego) {
-    if (mapa_cargado) es_juego = 1; 
-    else { puts("NO SE HA CARGADO EL LABERINTO"); return; }
+    if (!mapa_cargado) { puts("NO SE HA CARGADO EL LABERINTO"); return; }
     Player* jugador = inicializar_jugador() ;
 
     limpiar_pantalla();

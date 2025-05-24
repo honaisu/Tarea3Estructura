@@ -6,7 +6,6 @@
 
 #define ES_OPCION_VALIDA (o != '0')
 
-extern unsigned short es_juego;
 extern unsigned short mapa_cargado; 
 
 void pantalla_inicio(Map*);
