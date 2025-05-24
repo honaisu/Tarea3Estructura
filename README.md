@@ -16,11 +16,7 @@
 <summary> <b> Mapa del Juego (Spoilers)</b> </summary>
 <div align="center"> <br/>
 
-| Entrada Principal | Librería | Caverna Oscura  | Estudio |
-|:-----------------:|:--------:|:---------------:|:-------:|
-| Cocina            | Comedor  | Sótano          | Taller  |
-| Jardín            | Pasillo  | Sala del Tesoro | Almacén |
-| Dormitorio        | Corredor | Cámara Secreta  | Salida  |
+![Mapa del juego](Mapa.png)
 
 </div>
 </details> 
@@ -59,6 +55,8 @@ Una forma alternativa de compilación, funcional para <b>Windows</b> y <b>Linux<
 </details>
 
 ### Funciones del programa
+
+
 
 ### Problemas generales
 
