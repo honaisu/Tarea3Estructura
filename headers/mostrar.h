@@ -13,5 +13,7 @@ void mostrar_menu_principal(void);
 void mostrar_menu_jugador(void);
 void mostrar_estado_actual(Player*, const State_Map*);
 void mostrar_reseteo(void);
+void mostrar_mensaje_final(Player*);
+void mostrar_mensaje_derrota(void);
 
 #endif
