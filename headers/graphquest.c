@@ -1,10 +1,15 @@
 #include "graphquest.h"
 #include "mostrar.h"
 
-#define LEER_CAMPO campos = leer_linea_csv(archivo, ',')
-#define CADA_CAMPO LEER_CAMPO; campos != NULL; LEER_CAMPO
+// MACRO que se encarga de crear una variable que lea los campos.
+// Usada para poder leer cada línea del archivo CSV del archivo correspondiente.
+#define LEER_CAMPO(campo) campo = leer_linea_csv(archivo, ',')
+// MACRO usado para poder recorrer cada línea del archivo CSV que se presente.
+#define CADA_CAMPO(campo) LEER_CAMPO(campo); campo != NULL; LEER_CAMPO(campo)
 
+// Variable global que se encarga de guardar las IDs que se usan para la lectura
 void* IDs[16];
+// Variable global que se encarga de vef si es que el mapa se ha cargado o no. Cargado (1) y no cargado (0).
 unsigned short mapa_cargado = 0; 
 
 void guardar_items(State_Map*, char**);
@@ -74,14 +79,15 @@ void crear_conexiones(Map* mapa_juego) {
 
 void leer_mapa_completo(Map* mapa_juego) {
   limpiar_pantalla();
-  if (mapa_cargado) { puts("El laberinto ya fue cargado!"); return; }
+  if (mapa_cargado) { imprimir_separador("El laberinto ya fue cargado!", 40); imprimir_gato(); return; }
   
   FILE *archivo = fopen("data/graphquest.csv", "r");
   if (archivo == NULL) { perror("Error al abrir el archivo"); return; }
 
-  char** LEER_CAMPO;
+  imprimir_separador("Leyendo el laberinto...", 40);
+  char** LEER_CAMPO(campos);
   int posicionID = 0;
-  for(CADA_CAMPO, posicionID++) {
+  for(CADA_CAMPO(campos), posicionID++) {
     State_Map* nuevo_nodo = crear_estado(campos);
     if (nuevo_nodo == NULL) continue;
     IDs[posicionID] = &nuevo_nodo->ID;
@@ -89,6 +95,8 @@ void leer_mapa_completo(Map* mapa_juego) {
   }
   crear_conexiones(mapa_juego);
   
+  limpiar_pantalla();
+  imprimir_separador("El laberinto ha sido cargado!", 40);
   mapa_cargado = 1;
   fclose(archivo);
   return;
