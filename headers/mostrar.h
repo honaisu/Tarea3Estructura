@@ -11,6 +11,6 @@ void mostrar_datos(const State_Map*);
 void mostrar_historia(void);
 void mostrar_menu_principal(void);
 void mostrar_menu_jugador(void);
-void mostrar_estado_actual(Player*, State_Map*);
+void mostrar_estado_actual(Player*, const State_Map*);
 
 #endif

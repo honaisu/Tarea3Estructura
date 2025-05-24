@@ -11,6 +11,7 @@ void mostrar_items(List* items) {
 }
 
 void mostrar_conexiones(List* adyacentes) {
+  if (list_first(adyacentes) == NULL) return;
   State_Map* sala;
   puts("\033[1;33mCONEXIONES:\033[0m");
   for(CADA_RECORRIDO(sala, adyacentes)) {
@@ -59,19 +60,18 @@ void mostrar_menu_jugador() {
     puts("(*). Salir de la Partida") ;
 }
 
-void mostrar_estado_actual(Player* jugador, State_Map* estado) {
+void mostrar_estado_actual(Player* jugador, const State_Map* estado) {
     imprimir_separador("Te encuentras en la siguiente habitación", 50);
     mostrar_datos(estado);
     if (jugador == NULL) return;
 
-    imprimir_separador("De momento, te encuentras con las siguientes estadísticas", 50);
-    printf("Tiempo Restante: %d\n", jugador->tiempo);
+    imprimir_separador("De momento, te encuentras con las siguientes estadísticas", 70);
+    printf("Tiempo Restante: %d min\n", jugador->tiempo);
+    printf("Puntaje Total: %d pts\n", jugador->puntaje);
+    printf("Peso Total Actual: %d kg\n", jugador->peso_total);
     
-    Item* item;
-    for (CADA_RECORRIDO(item, jugador->items)) {
-        printf("   ->%s", item->nombre);
-    }
-    if (item == NULL) puts("Actualmente, no posees ningún item.");
+    if (jugador->items == NULL) puts("Actualmente, no posees ningún item.");
+    else mostrar_items(jugador->items);
 
-    free(item);
+    if (jugador->peso_total > 14) puts("\033[1;37m*Sientes tu cuerpo cada vez más cansado por el peso de tu mochila*\n*Cada paso se vuelve más lento*\033[0m");
 }
