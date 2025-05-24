@@ -127,3 +127,10 @@ void leer_opcion(char* opcion) {
   leer_entrada(temporal);
   sscanf(temporal, "%c", opcion); 
 }
+
+void imprimir_gato(void) {
+  puts(" \\    /\\               |\'/-..--.") ;
+  puts("  )  ( ')             / _ _   ,  ;")  ;
+  puts(" (  /  )             `~=`Y'~_<._./")  ;
+  puts("  \\(__)|             <`-....__.'")   ;
+}

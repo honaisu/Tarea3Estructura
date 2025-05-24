@@ -29,6 +29,8 @@ void imprimir_separador(const char*, const int) ;
 void leer_entrada(char*) ;
 // Lee lo que el usuario ingrese, pero asigna sólo el primer carácter a una opción.
 void leer_opcion(char*) ;
+// Solo imprime gatitos.
+void imprimir_gato(void);
 
 
 #endif
