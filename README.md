@@ -16,7 +16,7 @@
 <summary> <b> Mapa General del Juego (Spoilers)</b> </summary>
 <div align="center"> <br/>
 
-![Mapa del juego](Mapa.png)
+![Mapa del juego](Mapa_Objetos.png)
 
 </div>
 </details> 
@@ -57,19 +57,24 @@ Una forma alternativa de compilación, funcional para <b>Windows</b> y <b>Linux<
 
 ## Funciones del programa
 
-El programa incluye dos menús principales que son utilizados para la carga del programa:
+El programa incluye dos **menús esenciales** que son utilizados para la carga del programa:
 
 <details> 
 <summary> <b> Menú Principal: </b> </summary>
 
-- 
+1. `Cargar Laberinto`: Carga el laberinto desde un archivo CSV y permite que el juego pueda tener los datos para poder jugarse.
+2. `Iniciar Partida`: Al tener cargado el laberinto, permite poder iniciar una partida del juego desde cero.
 
 </details>
 
 <details>
 <summary> <b> Menú del Jugador: </b> </summary>
 
--
+1. `Recoger Item(s)`: Permite que el jugador pueda recoger los Objetos que hayan en la habitación. Si no hay, no hace nada. Cada vez que se agrega un Objeto al inventario del jugador, aumenta el puntaje total del jugador y el peso de su inventario (en base al Objeto).
+2. `Descartar Item(s)`: Permite que el jugador pueda descartar los Objetos que tenga en su inventario. Si no tiene, no hace nada. Cada vez que se descarte un Objeto del inventario del jugador, disminuye el puntaje total y el peso de su inventario (en base al Objeto).
+3. `Avanzar a una habitación`: Permite que el jugador avance a una habitación concreta adjunta a la habitación actual. Útil para recorrer el laberinto e ir descubriendo las habitaciones que existen. Si el jugador decide quedarse en la habitación, mostrará los datos actuales de la habitación y sus datos.
+4. `Ver datos de la habitación`: Muestra los datos actuales de la habitación en la que se encuentra el jugador.
+- `Reiniciar Partida`: Permite volver a crear una partida en medio de la partida actual. Vuelve a los valores predeterminados el laberinto y elimina todos los datos del jugador, para iniciar desde cero.
 </details>
 
 ### Headers Propios
