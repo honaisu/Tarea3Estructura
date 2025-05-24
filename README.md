@@ -10,7 +10,7 @@
 ```
 # GraphQuest
 
-**GraphQuest** es una aventura. En esta aventura, aventurarás.
+**GraphQuest** narra la travesía de un **viajero sin nombre** que se adentra en un antiguo laberinto en busca de tesoros olvidados. Su único objetivo es recolectar objetos valiosos para venderlos en el mercado negro, **luchando con el paso del tiempo** para no sucumbir en este terreno inexplorado. Solo la astucia y la ambición guían su camino, donde cada decisión puede llevarlo a la riqueza… o a perderse para siempre en las penumbras del laberinto. **¿Serás capaz de enfrentar esta mazmorra para volverte una leyenda entre los mercaderes clandestinos?**
 
 <details>
 <summary> <b> Mapa General del Juego (Spoilers)</b> </summary>
@@ -91,5 +91,6 @@ Este proyecto posee headers segmentados, encargados cada uno de distintas **func
 - Al momento de `leer una opción`, el programa leerá el **primer cáracter ingresado**. Si se **agregan más carácteres** después de eso no se considerará como un "problema", pero **tampoco se leerán**.
 - Si se **supera** el límite de la entrada del usuario (**200 carácteres máximo**), el programa no podrá interpretar más allá de lo que se ingrese.
 - Hay ciertos **carácteres especiales** pertenecientes al estándar `UTF-8` que no son mostrados correctamente dentro del programa. Esto puede ser arreglado en **sistemas usando Windows** aplicando la configuración especial `Beta: Use Unicode UTF-8` ubicado en la sección de **opciones de lenguaje administrativo** (`Administrative language settings`) y **lenguaje para programas no-Unicode** (`Language for non-Unicode programs`).
+- Puede que exista la posibilidad de que el programa **no muestre el texto como debería** en sistemas operativos **Windows** (o sistemas sin soporte directo a `BASH`).
 
 ## Ejemplos de ejecución
