@@ -22,6 +22,15 @@ Item* item_buscar(List* items, const char* nombre) {
     return NULL;
 }
 
+void jugador_actualizar_items(Player* jugador, List* lista, Item* item, const int signo) {
+    if (signo > 0) list_pushBack(jugador->items, item);
+    list_popCurrent(lista);
+
+    jugador->peso_total += signo * item->peso;
+    jugador->puntaje += signo * item->valor;
+    --(jugador->tiempo);
+}
+
 void jugador_recoger(Player* jugador) {
     State_Map* sala = jugador->sala_actual;
     if (list_first(sala->items) == NULL) { puts("*Intentas ver si hay items útiles en la habitación, pero no hay nada*"); return; }
@@ -33,11 +42,7 @@ void jugador_recoger(Player* jugador) {
     Item* items_sala = item_buscar(sala->items, entrada);
     if (items_sala == NULL) { puts("*Intentaste buscar un item que no existia en la habitación*"); return; }
         
-    list_pushBack(jugador->items, items_sala);
-    jugador->peso_total += items_sala->peso;
-    jugador->puntaje += items_sala->valor;
-    list_popCurrent(sala->items);
-    --(jugador->tiempo);
+    jugador_actualizar_items(jugador, sala->items, items_sala, 1);
     return;
 }
 
@@ -51,10 +56,7 @@ void jugador_descartar(Player* jugador) {
     Item* items_jugador = item_buscar(jugador->items, entrada);
     if (items_jugador == NULL) { puts("*Intentaste sacar un objeto que no existia en tu mochila*\n*-1 de estilo*"); return; }
         
-    jugador->peso_total -= items_jugador->peso;
-    jugador->puntaje -= items_jugador->valor;
-    list_popCurrent(jugador->items);
-    --(jugador->tiempo);
+    jugador_actualizar_items(jugador, jugador->items, items_jugador, -1);
     return;
 }
 
@@ -84,36 +86,59 @@ void jugador_avanzar(Player* jugador, Map* mapa_juego) {
     return;
 }
 
-void pantalla_jugador(Player* jugador, Map* mapa_juego) {
-  char o = '\0';
-  MapPair* pair = map_first(mapa_juego);
-  jugador->sala_actual = pair->value;
-  do {
-    if (o == '\0') { VER_ESTADO(jugador); esperar_enter(); }
-    mostrar_menu_jugador();
-    leer_opcion(&o);
-    switch (o) {
-        case '1': { jugador_recoger(jugador); break; }
-        case '2': { jugador_descartar(jugador); break; }
-        case '3': { jugador_avanzar(jugador, mapa_juego); o = '\0'; break; }
-        case '4': { VER_ESTADO(NULL); break; }
-
-        case '5': { break; }
-        case '*': { puts("FIN DE LA PARTIDA"); break; }
-        // Respuesta predeterminada
-        default: { puts("*Intentaste usar una opción no disponible*\n*No surgió efecto*"); o = 'd'; }
-    }
-    if (o != '*') esperar_enter();
-  } while (o != '*' && jugador->tiempo > 0);
-  return;
-}
-
 void jugador_default(Player* jugador){
     jugador->tiempo = _TIEMPO;
     jugador->sala_actual = NULL;
     jugador->puntaje = 0;
     jugador->peso_total = 0;
     (jugador->items == NULL) ? jugador->items = list_create() : list_clean(jugador->items);
+}
+
+void resetear_partida(Map* mapa_juego, Player* jugador) {
+    map_clean(mapa_juego);
+    mapa_cargado = 0;
+    leer_mapa_completo(mapa_juego);
+    jugador_default(jugador);
+    MapPair* pair = map_first(mapa_juego);
+    jugador->sala_actual = pair->value;
+    mostrar_reseteo();
+}
+
+int salir_partida(void) {
+    limpiar_pantalla();
+    imprimir_separador("¿Estás seguro de querer salir de la partida?", 60);
+    char o;
+    leer_opcion(&o);
+    return (o == 'S') ? 1 : 0; 
+}
+
+void casos_opciones(char* o, Player* jugador, Map* mapa_juego) {
+    switch (*o) {
+        case '1': { jugador_recoger(jugador); break; }
+        case '2': { jugador_descartar(jugador); break; }
+        case '3': { jugador_avanzar(jugador, mapa_juego); *o = '\0'; break; }
+        case '4': { VER_ESTADO(NULL); break; }
+
+        case '5': { resetear_partida(mapa_juego, jugador); break; }
+        case '*': { if (salir_partida()) { puts("FIN DE LA PARTIDA"); break; } }
+        // Respuesta predeterminada
+        default: { puts("*Intentaste usar una opción no disponible*\n*No surgió efecto*"); *o = 'd'; }
+    }
+    if (*o != '*') esperar_enter();
+}
+
+void pantalla_jugador(Player* jugador, Map* mapa_juego) {
+  MapPair* pair = map_first(mapa_juego);
+  jugador->sala_actual = pair->value;
+
+  char o = '\0';
+  do {
+    if (o == '\0') { VER_ESTADO(jugador); esperar_enter(); }
+    mostrar_menu_jugador();
+    leer_opcion(&o);
+    casos_opciones(&o, jugador, mapa_juego);
+  } while (o != '*' && jugador->tiempo > 0);
+  return;
 }
 
 Player* inicializar_jugador(void) {
@@ -130,5 +155,6 @@ void jugar_juego(Map* mapa_juego) {
     limpiar_pantalla();
     mostrar_historia();
     pantalla_jugador(jugador, mapa_juego);
+    free(jugador);
     return;
 }

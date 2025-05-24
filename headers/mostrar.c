@@ -75,3 +75,8 @@ void mostrar_estado_actual(Player* jugador, const State_Map* estado) {
 
     if (jugador->peso_total > 14) puts("\033[1;37m*Sientes tu cuerpo cada vez más cansado por el peso de tu mochila*\n*Cada paso se vuelve más lento*\033[0m");
 }
+
+void mostrar_reseteo() {
+  imprimir_separador("Reseteaste el mundo que existía a tu alrededor", 60);
+  puts("Has vuelto a renacer. Te has vuelto nuevamente uno con esta existencia.");
+}
