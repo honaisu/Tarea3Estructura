@@ -1,7 +1,7 @@
 #ifndef EXTRAS_H
 #define EXTRAS_H
-#include "list.h"
-#include "map.h"
+#include "TDAs/list.h"
+#include "TDAs/map.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,7 +23,7 @@ int is_equal_str(void*, void*);
 void limpiar_pantalla(void) ;
 // Espera que el input del usuario sea un ENTER (salto de línea) para continuar.
 void esperar_enter(void) ;
-// (Magnus Opus) Imprime un mensaje con un separador automático.
+// Imprime un mensaje con un separador automático.
 void imprimir_separador(const char*, const int) ;
 // Lee lo que el usuario ingrese y modifica un string.
 void leer_entrada(char*) ;

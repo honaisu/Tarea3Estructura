@@ -7,6 +7,11 @@
 void* IDs[16];
 unsigned short mapa_cargado = 0; 
 
+void guardar_items(State_Map*, char**);
+void guardar_direcciones(State_Map*, char**);
+State_Map* crear_estado(char**);
+void crear_conexiones(Map*);
+
 void guardar_items(State_Map* nodo, char** campos){
   List* items = split_string(campos[3], ";");
   nodo->items = list_create();

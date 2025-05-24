@@ -1,18 +1,31 @@
 #include "gameset.h"
 #include "mostrar.h"
 
-#define _TIEMPO 60
+// MACRO correspondiente al valor del tiempo del jugador.
+#define _TIEMPO 30 
+// MACRO usado para mostrar el estado actual de la sala. Limpia la pantalla y muestra los datos correspondientes.
+// Sólo es usado para poder ver el estado de la sala actual del jugador.
+// El parámetro "player" se encarga de reemplazar el valor en la función para saber si es necesario mostrar datos del jugador o no.
 #define VER_ESTADO(player) limpiar_pantalla(); mostrar_estado_actual(player, jugador->sala_actual)
+// MACRO encargado de la fórmula del tiempo [(Peso Total + 1) / 10].
+// Optimizado para no usar división (equivalencia de 1/10 con 0.1)
 #define FORMULA_TIEMPO (jugador->peso_total + 1) * 0.1
 
-// puts("*Intentas acabar con tu vida*\n
-//      *Al intentarlo, rompes el espacio-tiempo y vuelves a un estado nunca visto*\n
-//      *Ves como el mundo se resetea y deforma con el paso de los nanosegundos*\n
-//      *Terminas sin conciencia*\n FIN DE LA PARTIDA")
+//--- Funciones Principales del Jugador ---//
 
 void jugador_recoger(Player*);
 void jugador_descartar(Player*);
 void jugador_avanzar(Player*, Map*);
+void resetear_partida(Player*, Map*);
+int  salir_partida(void);
+
+//--- Funciones Varias del Jugador ---//
+Player* inicializar_jugador(void);
+void jugador_default(Player*);
+Item* item_buscar(List*, const char*);
+void jugador_actualizar_items(Player*, List*, Item*, const int);
+
+// --- //
 
 Item* item_buscar(List* items, const char* nombre) {
     Item* item;
@@ -94,7 +107,7 @@ void jugador_default(Player* jugador){
     (jugador->items == NULL) ? jugador->items = list_create() : list_clean(jugador->items);
 }
 
-void resetear_partida(Map* mapa_juego, Player* jugador) {
+void resetear_partida(Player* jugador, Map* mapa_juego) {
     map_clean(mapa_juego);
     mapa_cargado = 0;
     leer_mapa_completo(mapa_juego);
@@ -119,7 +132,7 @@ void casos_opciones(char* o, Player* jugador, Map* mapa_juego) {
         case '3': { jugador_avanzar(jugador, mapa_juego); *o = '\0'; break; }
         case '4': { VER_ESTADO(NULL); break; }
 
-        case '5': { resetear_partida(mapa_juego, jugador); break; }
+        case '5': { resetear_partida(jugador, mapa_juego); break; }
         case '*': { if (salir_partida()) { puts("FIN DE LA PARTIDA"); break; } }
         // Respuesta predeterminada
         default: { puts("*Intentaste usar una opción no disponible*\n*No surgió efecto*"); *o = 'd'; }
@@ -150,11 +163,12 @@ Player* inicializar_jugador(void) {
 
 void jugar_juego(Map* mapa_juego) {
     if (!mapa_cargado) { puts("NO SE HA CARGADO EL LABERINTO"); return; }
-    Player* jugador = inicializar_jugador() ;
+    Player* jugador = inicializar_jugador();
 
     limpiar_pantalla();
     mostrar_historia();
     pantalla_jugador(jugador, mapa_juego);
+    jugador_default(jugador);
     free(jugador);
     return;
 }

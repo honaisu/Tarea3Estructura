@@ -1,6 +1,14 @@
 #include "gameset.h"
 #include "mostrar.h"
 
+// MACRO que sólo se encarga de cambiar el color de una palabra para mostrar si está disponible o no.
+#define COLOR_ESTA_DISPONIBLE(variable) (variable) ? printf("\033[1;31m") : printf("\033[0m")
+
+/*
+\033[0m : Color Predeterminado.
+\033[1;Xm : Negrita con X siendo algún color.
+*/
+
 void mostrar_items(List* items) {
   if (list_first(items) == NULL) return;
   puts("\033[1;35mITEMS:\033[0m");
@@ -28,7 +36,7 @@ void mostrar_datos(const State_Map* estado) {
   putchar('\n');
 }
 
-void mostrar_historia() {
+void mostrar_historia(void) {
     imprimir_separador("GraphQuest: Journey of a Deadman's Tale", 50);
     puts("* historia * wow muy interesante narrativa");
     puts("  * mas historia ** ** *** ");
@@ -36,9 +44,7 @@ void mostrar_historia() {
     esperar_enter();
 }
 
-#define COLOR_ESTA_DISPONIBLE(variable) (variable) ? printf("\033[1;30m") : printf("\033[0m")
-
-void mostrar_menu_principal() {
+void mostrar_menu_principal(void) {
     limpiar_pantalla();
     imprimir_separador("GRAPHQUEST", 30);
     COLOR_ESTA_DISPONIBLE(mapa_cargado);
@@ -49,15 +55,15 @@ void mostrar_menu_principal() {
     puts("(0). Salir") ;
 }
 
-void mostrar_menu_jugador() {
+void mostrar_menu_jugador(void) {
     limpiar_pantalla();
-    imprimir_separador("Menú del jugador", 25);
+    imprimir_separador("Menú del Jugador", 30);
     puts("(1). Recoger Item(s)");
     puts("(2). Descartar Item(s)");
     puts("(3). Avanzar a una habitación");
-    puts("(4). Ver datos de la habitación");
-    puts("(5). Reiniciar Partida");
-    puts("(*). Salir de la Partida") ;
+    puts("(4). Ver datos de la habitación\n");
+    puts("(-). Reiniciar Partida");
+    puts("(0). Salir de la Partida") ;
 }
 
 void mostrar_estado_actual(Player* jugador, const State_Map* estado) {
@@ -76,7 +82,7 @@ void mostrar_estado_actual(Player* jugador, const State_Map* estado) {
     if (jugador->peso_total > 14) puts("\033[1;37m*Sientes tu cuerpo cada vez más cansado por el peso de tu mochila*\n*Cada paso se vuelve más lento*\033[0m");
 }
 
-void mostrar_reseteo() {
+void mostrar_reseteo(void) {
   imprimir_separador("Reseteaste el mundo que existía a tu alrededor", 60);
   puts("Has vuelto a renacer. Te has vuelto nuevamente uno con esta existencia.");
 }
