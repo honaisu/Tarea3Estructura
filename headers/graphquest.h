@@ -12,8 +12,8 @@ extern unsigned short mapa_cargado;
 // Estructura que guarda los elementos (nombre, valor y peso) de los Objetos.
 typedef struct Item{
   char* nombre;
-  int valor;
-  int peso;
+  int valor; // Puntaje del Objeto (pts)
+  int peso; // Peso del Objeto (kg)
 } Item;
 
 // Estructura que guarda cada elemento de la sala en la que se encuentre.
