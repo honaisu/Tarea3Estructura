@@ -67,13 +67,14 @@ El programa incluye dos **menús esenciales** que son utilizados para la carga d
 
 </details>
 
+---
 <details>
 <summary> <b> Menú del Jugador: </b> </summary>
 
 1. `Recoger Item(s)`: Permite que el jugador pueda recoger los Objetos que hayan en la habitación. Si no hay, no hace nada. Cada vez que se agrega un Objeto al inventario del jugador, aumenta el puntaje total del jugador y el peso de su inventario (en base al Objeto).
 2. `Descartar Item(s)`: Permite que el jugador pueda descartar los Objetos que tenga en su inventario. Si no tiene, no hace nada. Cada vez que se descarte un Objeto del inventario del jugador, disminuye el puntaje total y el peso de su inventario (en base al Objeto).
-3. `Avanzar a una habitación`: Permite que el jugador avance a una habitación concreta adjunta a la habitación actual. Útil para recorrer el laberinto e ir descubriendo las habitaciones que existen. Si el jugador decide quedarse en la habitación, mostrará los datos actuales de la habitación y sus datos.
-4. `Ver datos de la habitación`: Muestra los datos actuales de la habitación en la que se encuentra el jugador.
+3. `Avanzar a una habitación`: Permite que el jugador avance a una habitación concreta adjunta a la habitación actual. Útil para recorrer el laberinto e ir descubriendo las habitaciones que existen. Si el jugador **decide quedarse** en la habitación, **mostrará el estado actual** de la habitación y sus **estadísticas propias**.
+4. `Ver datos de la habitación`: Muestra **solo** los datos actuales de la habitación en la que se encuentra el jugador.
 - `Reiniciar Partida`: Permite volver a crear una partida en medio de la partida actual. Vuelve a los valores predeterminados el laberinto y elimina todos los datos del jugador, para iniciar desde cero.
 </details>
 
@@ -83,14 +84,16 @@ Este proyecto posee headers segmentados, encargados cada uno de distintas **func
 
 - `Extras`: Encargado de funciones varias que implemento en varios de los proyectos del ramo. Fue creada desde la primer tarea, pero ha sido y sigo modificándola para crear más funciones esenciales que uso para los proyectos. También, es la **cabeza de los headers**, implementando los **headers de C** (y **TDAs**) que más he utilizado (`stdio`, `stdlib` y `string`; `list` y `map`) para usarlos en **todos** los demás headers. 
 - `GraphQuest`: Es el header encargado de la **funcionalidad de la lectura del laberinto**. Posee funciones propias que se encargan de poder acceder al archivo ubicado en `data` y crear un mapa funcional con las conexiones correspondientes a cada nodo.
-- `GameSet`: El **header principal** del programa. Es el que permite el funcionamiento del juego e implementa todos los sistemas que hacen que la aventura pueda ser disfrutada. Posee sólo las funciones que se encargan del propio **jugador**.
+- `GameSet`: El **header principal** del programa. Es el que permite el funcionamiento del juego e implementa todos los sistemas que hacen que la aventura pueda ser disfrutada. Posee las funciones que se encargan del **jugador**.
 - `Mostrar`: Header especialmente dedicado a imprimir los mensajes que se ven a lo largo del programa. Me permite poder tener todos los mensajes que desee crear en un único lugar, siendo versátil para este programa en específico.
 
-### Problemas generales
+### Advertencias generales
 
 - Al momento de `leer una opción`, el programa leerá el **primer cáracter ingresado**. Si se **agregan más carácteres** después de eso no se considerará como un "problema", pero **tampoco se leerán**.
 - Si se **supera** el límite de la entrada del usuario (**200 carácteres máximo**), el programa no podrá interpretar más allá de lo que se ingrese.
 - Hay ciertos **carácteres especiales** pertenecientes al estándar `UTF-8` que no son mostrados correctamente dentro del programa. Esto puede ser arreglado en **sistemas usando Windows** aplicando la configuración especial `Beta: Use Unicode UTF-8` ubicado en la sección de **opciones de lenguaje administrativo** (`Administrative language settings`) y **lenguaje para programas no-Unicode** (`Language for non-Unicode programs`).
-- Puede que exista la posibilidad de que el programa **no muestre el texto como debería** en sistemas operativos **Windows** (o sistemas sin soporte directo a `BASH`).
+- Puede que exista la posibilidad de que el programa **no muestre el texto como debería** en sistemas operativos **Windows** (o sistemas sin soporte directo a `BASH`). Esto puede ser **solucionado** si se utiliza la **Terminal de Windows** (con soporte directo; no confundir con **PowerShell** o **CMD**), o implementar la compatibilidad con `BASH` en las demás terminales.
+- El MACRO `FORMULA TIEMPO` usada dentro del programa, para restar el tiempo al jugador, puede que no sea similar a la fórmula mostrada en el `Notion` (T = [P.T + 1]/10). Esto lo tomé como una **decisión de diseño**, buscando omitir el uso de la división y haciendo que **el tiempo siempre baje por el casting hecho a `int`**. Siempre que se use el MACRO, **restará por lo menos uno al tiempo**.
 
 ## Ejemplos de ejecución
+
