@@ -48,12 +48,11 @@ void jugador_default(Player*);
 // Si el Objeto existe dentro de la lista, retorna ese Objeto.
 // Si no, retorna nulo.
 Item* item_buscar(List*, const char*);
-// Actualiza (agrega o remueve) los Objetos que existan dentro del jugador.
+// Actualiza los datos del jugador dependiendo de los Objetos que se agruegen.
 // El primer parámetro es el jugador, necesario para poder actualizar su lista de Objetos.
-// El segundo es la lista de Objetos a usar para agregar (o remover) un Objeto específico.
-// El tercer parámetro es el Objeto a buscar. Si no existe el Objeto, no hace nada; si existe, lo agrega o remueve del jugador y cambia su peso y puntaje total.
-// El cuarto parámetro es una constante que verifica si es que se necesita agregar o remover el Objeto al inventario del jugador.
-void jugador_actualizar_items(Player*, List*, Item*, const int);
+// El segundo parámetro es el Objeto a buscar. Si no existe el Objeto, no hace nada; si existe, cambia el peso y puntaje total del jugador.
+// El tercer parámetro es una constante que verifica si es que se necesita agregar o remover los parámetros del Objeto al inventario del jugador.
+void jugador_actualizar_items(Player*, Item*, const int);
 
 // Resetea el mapa para poder volver a ser usado en medio de la partida (casos de reinicio o salida).
 void resetear_mapa(Map*);
@@ -66,14 +65,28 @@ void jugador_recoger(Player* jugador) {
     if (list_first(sala->items) == NULL) { puts("*Intentas ver si hay Objetos útiles en la habitación, pero no hay nada*"); return; }
     mostrar_items(sala->items);
 
+    Item* items_sala;
     char entrada[200];
-    ENTRADA(entrada, "a recoger");
+    ENTRADA(entrada, "a recoger (\"0\" para todos los items)");
     // --- //
+    if (*entrada == '0') { // Si es la opción 0
+        items_sala = list_first(sala->items);
+        while (items_sala != NULL) {
+            list_pushBack(jugador->items, items_sala); // Agrega a la lista del jugador
+            jugador_actualizar_items(jugador, items_sala, 1); // Actualiza los datos (valor, peso y tiempo) del jugador
+            items_sala = list_next(sala->items);
+            list_popBack(sala->items); // Elimina el último elemento de la lista de la sala (el primero agregado al jugador)
+        }
+    } else {
+        items_sala = item_buscar(sala->items, entrada);
+        if (items_sala == NULL) { puts("*Intentaste materializar un Objeto inexistente en la habitación*\n*No tuvo efecto*"); return; }
+
+        list_pushBack(jugador->items, items_sala);
+        list_popCurrent(sala->items);
+        jugador_actualizar_items(jugador, items_sala, 1);
+    }
     
-    Item* items_sala = item_buscar(sala->items, entrada);
-    if (items_sala == NULL) { puts("*Intentaste materializar un Objeto inexistente en la habitación*\n*No tuvo efecto*"); return; }
-        
-    jugador_actualizar_items(jugador, sala->items, items_sala, 1);
+    puts("\033[1;37mObjeto(s) recogido(s).\033[0m");
     return;
 }
 
@@ -88,8 +101,10 @@ void jugador_descartar(Player* jugador) {
 
     Item* items_jugador = item_buscar(jugador->items, entrada);
     if (items_jugador == NULL) { puts("*Intentaste sacar un Objeto que no existia en tu mochila*\n*-1 de estilo*"); return; }
-        
-    jugador_actualizar_items(jugador, jugador->items, items_jugador, -1);
+    
+    list_popCurrent(jugador->items);
+    jugador_actualizar_items(jugador, items_jugador, -1);
+    puts("\033[1;37mObjeto descartado.\033[0m");
     return;
 }
 
@@ -279,10 +294,8 @@ Item* item_buscar(List* items, const char* nombre) {
     return NULL;
 }
 
-void jugador_actualizar_items(Player* jugador, List* lista, Item* item, const int signo) {
-    if (signo > 0) list_pushBack(jugador->items, item);
-    list_popCurrent(lista);
-
+void jugador_actualizar_items(Player* jugador, Item* item, const int signo) {
+    if (item == NULL) return;
     jugador->peso_total += signo * item->peso;
     jugador->puntaje += signo * item->valor;
     --(jugador->tiempo);
