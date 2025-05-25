@@ -111,7 +111,7 @@ void jugador_avanzar(Player* jugador) {
         adyacente = list_first(sala->adj_nodes);
         // Irá recorriendo los nodos adyacentes
         // Limite es una variable que hará que avance a la posición deseada (la dirección correcta)
-        // EJ: k < 2 ... sala 1 -> sala 2 -> *sala 3* (IZQUIERDA)
+        // EJ: lim = 2 ... sala 1 -> sala 2 -> *sala 3* (IZQUIERDA)
         for (int k = 0; k < limite; k++) adyacente = list_next(sala->adj_nodes);
         // Imprime la dirección y el nombre de la sala adyacente.
         printf("   -> %s: \033[1;37m%s\033[0m\n", direcciones[i], adyacente->nombre);
