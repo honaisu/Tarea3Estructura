@@ -56,6 +56,8 @@ void jugador_actualizar_items(Player*, Item*, const int);
 
 // Resetea el mapa para poder volver a ser usado en medio de la partida (casos de reinicio o salida).
 void resetear_mapa(Map*);
+// Implementación de la función ceil de <math.h>. Hace que el número siempre vaya para arriba si su casting a entero es distinto.
+int ceil_nt(float);
 
 // --- //
 
@@ -69,9 +71,9 @@ void jugador_recoger(Player* jugador) {
     char entrada[200];
     ENTRADA(entrada, "a recoger (\"0\" para todos los items)");
     // --- //
-    if (*entrada == '0') { // Si es la opción 0
+    if (*entrada == '0') { // Si es la opción 0 (todos los items)
         items_sala = list_first(sala->items);
-        while (items_sala != NULL) {
+        while (items_sala != NULL) { // Se agrega cada item de la lista
             list_pushBack(jugador->items, items_sala); // Agrega a la lista del jugador
             jugador_actualizar_items(jugador, items_sala, 1); // Actualiza los datos (valor, peso y tiempo) del jugador
             items_sala = list_next(sala->items);
@@ -106,6 +108,13 @@ void jugador_descartar(Player* jugador) {
     jugador_actualizar_items(jugador, items_jugador, -1);
     puts("\033[1;37mObjeto descartado.\033[0m");
     return;
+}
+
+// Implementación de Ceil para la fórmula del tiempo
+int ceil_nt(float x) {
+    int entero = (int)x; // Convierte el flotante a entero
+    if (x == (float)entero) return entero; // Compara el entero con el flotante. Si son iguales devuelve el entero
+    return (x > 0) ? entero + 1 : entero; // Si difieren se le aumenta uno al entero
 }
 
 void jugador_avanzar(Player* jugador) {
@@ -170,8 +179,8 @@ void jugador_avanzar(Player* jugador) {
         es_final = 1;
     } else {
         printf("Decides moverte a esta habitación: \033[1;37m%s\033[0m\n", jugador->sala_actual->nombre);
-        // Se resta el tiempo
-        jugador->tiempo -= FORMULA_TIEMPO;
+        // Se resta el tiempo (con ceil en la formula del tiempo)
+        jugador->tiempo -= (int) ceil_nt(FORMULA_TIEMPO);
         esperar_enter();
         mostrar_estado_actual(jugador, jugador->sala_actual);
     }
