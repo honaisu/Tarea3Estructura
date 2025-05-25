@@ -14,6 +14,8 @@
 
 <details>
 <summary> <b> Mapa General del Juego (Spoilers)</b> </summary>
+Vista general del mapa (invertido verticalmente).
+
 <div align="center"> <br/>
 
 ![Mapa del Juego](https://github.com/user-attachments/assets/1bdd9a0a-9b81-49ff-9ed6-6b81fdc44e50)
