@@ -5,13 +5,11 @@
 // 3. GraphQuest   (Funciones del Mapa)                  [3. -> 4.]
 // 4. GameSet      (Funciones del Juego)                 [4. -> main.c]
 
-// Simple: gcc main.c headers/*.c -o main
-// Debug: gcc -g main.c headers/*.c -o main
+// Simple: gcc main.c headers/*.c headers/TDAs/*.c -o main
+// Debug: gcc -g main.c headers/*.c headers/TDAs/*.c -o main
 
-extern unsigned short mapa_cargado; 
-
+void casos_opciones_inicio(char*, Map*);
 void pantalla_inicio(Map*);
-void pantalla_jugador(void);
 void limpiar_grafo(Map*);
 
 // --- //
@@ -35,7 +33,7 @@ void casos_opciones_inicio(char* o, Map* mapa_juego) {
     leer_opcion(o);
     switch (*o) {
         // Leer y cargar el laberinto del juego
-        case '1': { leer_mapa_completo(mapa_juego); break; }
+        case '1': { leer_mapa_completo(mapa_juego, 'N'); break; }
         // Jugar al juego
         case '2': { jugar_juego(mapa_juego); break; }
         // Salida del programa
