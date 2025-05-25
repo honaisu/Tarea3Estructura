@@ -37,51 +37,55 @@ void mostrar_datos(const State_Map* estado) {
 }
 
 void mostrar_historia(void) {
-    imprimir_separador("GraphQuest: Journey of a Deadman's Tale", 50);
-    puts("Eres un viajero sin nombre, conocido solo por tu astucia y ambición.");
-    puts("Las leyendas hablan de un antiguo laberinto, repleto de tesoros olvidados por viajeros que sucumbieron.");
-    puts("Tu objetivo es simple: adentrarte en sus pasillos, recolectar los objetos más valiosos y salir con vida.");
-    puts("No buscas gloria, solo riquezas que venderás en los rincones más oscuros del mercado negro.");
-    puts("¿Serás capaz de burlar los peligros y convertirte en leyenda entre los mercaderes clandestinos?");
-    esperar_enter();
+  imprimir_separador("GraphQuest: Journey of a Deadman's Tale", 50);
+  puts("Eres un viajero sin nombre, conocido solo por tu astucia y ambición.");
+  puts("Las leyendas hablan de un antiguo laberinto, repleto de tesoros olvidados por viajeros que sucumbieron.");
+  puts("Tu objetivo es simple: adentrarte en sus pasillos, recolectar los objetos más valiosos y salir con vida.");
+  puts("No buscas gloria, solo riquezas que venderás en los rincones más oscuros del mercado negro.");
+  puts("¿Serás capaz de burlar los peligros y convertirte en leyenda entre los mercaderes clandestinos?");
+  esperar_enter();
 }
 
 void mostrar_menu_principal(void) {
-    limpiar_pantalla();
-    imprimir_separador("GRAPHQUEST", 40);
-    COLOR_ESTA_DISPONIBLE(mapa_cargado);
-    puts("(1). Cargar Laberinto");
-    COLOR_ESTA_DISPONIBLE(!mapa_cargado) ;
-    puts("(2). Iniciar Partida");
-    printf("\033[0m");
-    puts("(0). Salir") ;
+  limpiar_pantalla();
+  imprimir_separador("GRAPHQUEST", 40);
+  COLOR_ESTA_DISPONIBLE(mapa_cargado);
+  puts("(1). Cargar Laberinto");
+  COLOR_ESTA_DISPONIBLE(!mapa_cargado) ;
+  puts("(2). Iniciar Partida");
+  printf("\033[0m");
+  puts("(0). Salir") ;
 }
 
 void mostrar_menu_jugador(void) {
-    limpiar_pantalla();
-    imprimir_separador("Menú del Jugador", 30);
-    puts("(1). Recoger Item(s)");
-    puts("(2). Descartar Item(s)");
-    puts("(3). Avanzar a una habitación");
-    puts("(4). Ver datos de la habitación\n");
-    puts("(-). Reiniciar Partida");
-    puts("(0). Salir de la Partida") ;
+  limpiar_pantalla();
+  imprimir_separador("Menú del Jugador", 30);
+  puts("(1). Recoger Item(s)");
+  puts("(2). Descartar Item(s)");
+  puts("(3). Avanzar a una habitación");
+  puts("(4). Ver estado de la habitación");
+  puts("(5). Ver estado del jugador\n");
+  puts("(-). Reiniciar Partida");
+  puts("(0). Salir de la Partida") ;
 }
 
 void mostrar_estado_actual(Player* jugador, const State_Map* estado) {
+  limpiar_pantalla();
+  if (estado != NULL) {
     imprimir_separador("Te encuentras en la siguiente habitación", 70);
     mostrar_datos(estado);
-    if (jugador == NULL) return;
+  }
+  if (jugador == NULL) return;
 
-    imprimir_separador("De momento, te encuentras con las siguientes estadísticas", 70);
-    printf("Tiempo Restante: %d min\n", jugador->tiempo);
-    printf("Puntaje Total: %d pts\n", jugador->puntaje);
-    printf("Peso Total Actual: %d kg\n", jugador->peso_total);
-    
-    if (jugador->items == NULL) puts("Actualmente, no posees ningún item.");
-    else mostrar_items(jugador->items);
+  imprimir_separador("De momento, te encuentras con las siguientes estadísticas", 70);
+  printf("Tiempo Restante: %d min\n", jugador->tiempo);
+  printf("Puntaje Total: %d pts\n", jugador->puntaje);
+  printf("Peso Total Actual: %d kg\n", jugador->peso_total);
+  
+  if (jugador->items == NULL) puts("Actualmente, no posees ningún item.");
+  else mostrar_items(jugador->items);
 
-    if (jugador->peso_total > 14) puts("\033[1;37m*Sientes tu cuerpo cada vez más cansado por el peso de tu mochila*\n*Cada paso se vuelve más lento*\033[0m");
+  if (jugador->peso_total > 14) puts("\033[1;37m*Sientes tu cuerpo cada vez más cansado por el peso de tu mochila*\n*Cada paso se vuelve más lento*\033[0m");
 }
 
 void mostrar_reseteo(void) {
