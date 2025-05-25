@@ -4,7 +4,7 @@
 // MACRO que sólo se encarga de cambiar el color de una palabra para mostrar si está disponible o no.
 #define COLOR_ESTA_DISPONIBLE(variable) (variable) ? printf("\033[1;31m") : printf("\033[0m")
 
-/* Colores de BASH
+/* Colores de ANSI
 \033[0m : Color Predeterminado.
 \033[Xm : Color X.
 \033[1;Xm : Negrita con X siendo algún color.
