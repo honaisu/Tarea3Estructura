@@ -16,7 +16,7 @@
 <summary> <b> Mapa General del Juego (Spoilers)</b> </summary>
 <div align="center"> <br/>
 
-![Mapa del juego](Mapa_Objetos.png)
+![Mapa del Juego](https://github.com/user-attachments/assets/1bdd9a0a-9b81-49ff-9ed6-6b81fdc44e50)
 
 </div>
 </details> 
