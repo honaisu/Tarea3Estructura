@@ -73,8 +73,8 @@ El programa incluye dos **menús esenciales** que son utilizados para la carga d
 
 1. `Recoger Item(s)`: Permite que el jugador pueda recoger los Objetos que hayan en la habitación. Si no hay, no hace nada. Cada vez que se agrega un Objeto al inventario del jugador, aumenta el puntaje total del jugador y el peso de su inventario (en base al Objeto).
 2. `Descartar Item(s)`: Permite que el jugador pueda descartar los Objetos que tenga en su inventario. Si no tiene, no hace nada. Cada vez que se descarte un Objeto del inventario del jugador, disminuye el puntaje total y el peso de su inventario (en base al Objeto).
-3. `Avanzar a una habitación`: Permite que el jugador avance a una habitación concreta adjunta a la habitación actual. Útil para recorrer el laberinto e ir descubriendo las habitaciones que existen. Si el jugador **decide quedarse** en la habitación, **mostrará el estado actual** de la habitación y sus **estadísticas propias**.
-4. `Ver datos de la habitación`: Muestra **solo** los datos actuales de la habitación en la que se encuentra el jugador.
+3. `Avanzar a una habitación`: Permite que el jugador avance a una habitación concreta adjunta a la habitación actual. Útil para recorrer el laberinto e ir descubriendo las habitaciones que existen. 
+4. `Ver datos de la habitación`: Muestra los **datos actuales** de la habitación en la que se encuentra el jugador.
 5. `Ver estado del jugador`: Muestra las **estadísticas actuales** en las que se encuentra el jugador.
 - `Reiniciar Partida`: Permite volver a crear una partida en medio de la partida actual. Vuelve a los valores predeterminados el laberinto y elimina todos los datos del jugador, para iniciar desde cero.
 </details>
