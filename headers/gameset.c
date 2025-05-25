@@ -3,10 +3,6 @@
 
 // MACRO correspondiente al valor del tiempo del jugador.
 #define _TIEMPO 30
-// MACRO usado para mostrar el estado actual de la sala. Limpia la pantalla y muestra los datos correspondientes.
-// Sólo es usado para poder ver el estado de la sala actual del jugador.
-// El parámetro "player" se encarga de reemplazar el valor en la función para saber si es necesario mostrar datos del jugador o no.
-#define VER_ESTADO(player) limpiar_pantalla(); mostrar_estado_actual(player, jugador->sala_actual)
 // MACRO encargado de la fórmula del tiempo [(Peso Total + 1) / 10].
 // Optimizado para no usar división (equivalencia de 1/10 con 0.1)
 #define FORMULA_TIEMPO (jugador->peso_total + 1) * 0.1
@@ -70,6 +66,7 @@ void jugador_recoger(Player* jugador) {
 
     char entrada[200];
     ENTRADA(entrada, "a recoger");
+    // --- //
     
     Item* items_sala = item_buscar(sala->items, entrada);
     if (items_sala == NULL) { puts("*Intentaste materializar un Objeto inexistente en la habitación*\n*No tuvo efecto*"); return; }
@@ -85,6 +82,7 @@ void jugador_descartar(Player* jugador) {
 
     char entrada[200];
     ENTRADA(entrada, "a descartar");
+    // --- //
 
     Item* items_jugador = item_buscar(jugador->items, entrada);
     if (items_jugador == NULL) { puts("*Intentaste sacar un Objeto que no existia en tu mochila*\n*-1 de estilo*"); return; }
@@ -98,10 +96,12 @@ void jugador_avanzar(Player* jugador, Map* mapa_juego) {
     limpiar_pantalla();
     imprimir_separador("Decides ver las habitaciones adjuntas a la actual", 50);
     mostrar_conexiones(jugador->sala_actual->adj_nodes);
-
     // --- //
+    
+    // Un mapa creado sólo para poder buscar la sala por nombre en vez de ID
     Map* conexiones = map_create(is_equal_str);
-    State_Map* lista_conexiones;
+    // Lista de las salas adyacentes a la actual del jugador
+    State_Map* lista_conexiones; 
     for (CADA_RECORRIDO(lista_conexiones, jugador->sala_actual->adj_nodes)) {
         map_insert(conexiones, lista_conexiones->nombre, lista_conexiones);
     }
@@ -109,29 +109,40 @@ void jugador_avanzar(Player* jugador, Map* mapa_juego) {
     char entrada[200];
     puts("¿A qué habitación decides moverte? (Ninguna: \"0\")");
     leer_entrada(entrada);
-    MapPair* a = map_search(conexiones, entrada);
-    if (!strcmp(entrada, "0")) { puts("*Decides quedarte en la misma habitación*"); free(conexiones); return; }
-    else if (a == NULL) { puts("*Intentaste moverte a una habitación inexistente*\n*No surge efecto*"); free(conexiones); return; }
     // --- //
+    MapPair* a = map_search(conexiones, entrada); // Mal nombre pero no se me ocurrió otro xd
+    free(conexiones); // Elimina el mapa de conexiones apenas encuentra (no es necesario) 
+    // --- //
+    // En caso de quedarse en la habitación o que la búsqueda haya sido nula, retorna.
+    if (!strcmp(entrada, "0")) { puts("*Decides quedarte en la misma habitación*"); return; } 
+    else if (a == NULL) { puts("*Intentaste moverte a una habitación inexistente*\n*No surge efecto*"); return; }
+    // --- //
+
     limpiar_pantalla();
-    jugador->sala_actual = a->value;
-    if (jugador->sala_actual->final == 'S') { 
+    // Si se encuentra la sala a la que se desea mover, la sala actual del jugador será la nueva.
+    jugador->sala_actual = a->value; 
+
+    if (jugador->sala_actual->final == 'S') { // En caso de que la habitación sea final.
         mostrar_mensaje_final(jugador);
         es_final = 1;
     } else {
         printf("Decides moverte a esta habitación: \033[1;37m%s\033[0m\n", jugador->sala_actual->nombre);
         jugador->tiempo -= FORMULA_TIEMPO;
+        esperar_enter();
+        mostrar_estado_actual(jugador, jugador->sala_actual);
     }
-    free(conexiones);
-    return;
 }
 
 
 void resetear_partida(Player* jugador, Map* mapa_juego) {
+    // --- Impresion --- //
     limpiar_pantalla();
-    imprimir_separador("¿Quierés resetear la partida actual (PERDERÁS TODO EL PROGRESO)? [S/N]", 75);
+    imprimir_separador("¿Quieres resetear la partida actual (PERDERÁS TODO EL PROGRESO)? [S/N]", 75);
+    // --- //
+
     char o;
     leer_opcion(&o);
+    // --- Impresion --- //
     if (o == 'N') {
         puts("Decidiste quedarte en la misma partida.");
         return;
@@ -140,46 +151,59 @@ void resetear_partida(Player* jugador, Map* mapa_juego) {
         puts("*No haces nada*");
         return;
     }
-
     // --- //
     
+    // SI se decide resetear, devuelve los valores predeterminados el jugador y mapa
     jugador_default(jugador);
     resetear_mapa(mapa_juego);
     MapPair* pair = map_first(mapa_juego);
-    jugador->sala_actual = pair->value;
-    mostrar_reseteo();
+    jugador->sala_actual = pair->value; // Del mapa, consigue la primer sala para que sea la actual del jugador
+    mostrar_reseteo(); // Mensaje reseteo
 }
 
-void salir_partida(char* o, Player* jugador, Map* mapa_juego) {
+void salir_partida(char* o_original, Player* jugador, Map* mapa_juego) {
+    // --- Impresion --- //
     limpiar_pantalla();
     imprimir_separador("¿Estás seguro de querer salir de la partida? [S/N]", 60);
-    leer_opcion(o);
-    if (*o == 'S') {
-        *o = '0';
-        resetear_mapa(mapa_juego);
+    
+    char o;
+    leer_opcion(&o);
+    if (o == 'S') {
+        *o_original = '0'; // Al terminar la función, acabará la partida
         jugador_default(jugador);
         free(jugador);
         imprimir_separador("FIN DE LA PARTIDA", 60);
-    } else if (*o != 'N') {
+        return;
+    } 
+
+    // --- Impresion --- //
+    if (o != 'N') {
         puts("*Intentaste pensar si salir valdría la pena o no*");
         puts("*No haces nada*");
     } else puts("No decidiste sucumbir a la tentación.");
+
+    *o_original = 'd'; // Evita que el jugador SALGA sin querer
 }
 
 void casos_opciones(char* o, Player* jugador, Map* mapa_juego) {
     switch (*o) {
+        // Recoger Item(s)
         case '1': { jugador_recoger(jugador); break; }
+        // Descartar Item(s)
         case '2': { jugador_descartar(jugador); break; }
-        case '3': { jugador_avanzar(jugador, mapa_juego); *o = '\0'; break; }
-        case '4': { VER_ESTADO(NULL); break; }
+        // Avanzar a una habitación
+        case '3': { jugador_avanzar(jugador, mapa_juego); break; }
+        // Ver estado de la habitación
+        case '4': { mostrar_estado_actual(NULL, jugador->sala_actual); break; }
+        // Ver estado del jugador
+        case '5': { mostrar_estado_actual(jugador, NULL); break; }
 
         case '-': { resetear_partida(jugador, mapa_juego); break; }
         case '0': { salir_partida(o, jugador, mapa_juego); break; }
         // Respuesta predeterminada
-        default: { puts("*Intentaste usar una opción no disponible*\n*No surgió efecto*"); *o = 'd'; }
+        default: { puts("*Intentaste usar una opción no disponible*\n*No surgió efecto*"); }
     }
     if (*o != '0' && !es_final) esperar_enter();
-    if (*o == '\0' && !es_final) { VER_ESTADO(jugador); esperar_enter(); }
 }
 
 void pantalla_jugador(Player* jugador, Map* mapa_juego) {
@@ -193,7 +217,7 @@ void pantalla_jugador(Player* jugador, Map* mapa_juego) {
         casos_opciones(&o, jugador, mapa_juego);
     } while (o != '0' && jugador->tiempo > 0 && !es_final);
 
-    if (!(jugador->tiempo > 0)) mostrar_mensaje_derrota();
+    if (jugador->tiempo <= 0) mostrar_mensaje_derrota();
     return;
 }
 
@@ -213,6 +237,7 @@ void jugar_juego(Map* mapa_juego) {
 void resetear_mapa(Map* mapa_juego) {
     map_clean(mapa_juego);
     mapa_cargado = 0;
+    // Lee el mapa con la condición de modo reset
     leer_mapa_completo(mapa_juego, 'S');
 }
 
