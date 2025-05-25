@@ -141,23 +141,26 @@ void jugador_avanzar(Player* jugador) {
     // Encontrar la sala del jugador
     adyacente = list_first(sala->adj_nodes);
     for (int i = 0; i < 4; i++) {
-        if (sala->direcciones[i] == -1) continue; // NULA
+        if (sala->direcciones[i] == -1) continue; // NULA (OMITIR)
         
         if (i == direccion_deseada) break; // Si llega a la dirección deseada, termina el ciclo
-        adyacente = list_next(sala->adj_nodes);
+        adyacente = list_next(sala->adj_nodes); // Sigue recorriendo la lista de nodos adyacentes
     }
     jugador->sala_actual = adyacente; // El nodo de la lista recorrida con la dirección correcta será la sala actual.
 
+    // --- Impresion --- //
     limpiar_pantalla();
     if (jugador->sala_actual->final == 'S') { // En caso de que la habitación sea final.
         mostrar_mensaje_final(jugador);
         es_final = 1;
     } else {
         printf("Decides moverte a esta habitación: \033[1;37m%s\033[0m\n", jugador->sala_actual->nombre);
+        // Se resta el tiempo
         jugador->tiempo -= FORMULA_TIEMPO;
         esperar_enter();
         mostrar_estado_actual(jugador, jugador->sala_actual);
     }
+    // --- //
 }
 
 
