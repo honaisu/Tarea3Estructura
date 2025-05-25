@@ -91,7 +91,7 @@ Este proyecto posee headers segmentados, encargados cada uno de distintas **func
 ### Advertencias generales
 
 - Hay ciertos **carácteres especiales** pertenecientes al estándar `UTF-8` que no son mostrados correctamente dentro del programa. Esto puede ser arreglado en **sistemas usando Windows** aplicando la configuración especial `Beta: Use Unicode UTF-8` ubicado en la sección de **opciones de lenguaje administrativo** (`Administrative language settings`) y **lenguaje para programas no-Unicode** (`Language for non-Unicode programs`).
-- Puede que exista la posibilidad de que el programa **no muestre el texto como debería** en sistemas operativos **Windows** (o sistemas sin soporte directo a `BASH`). Esto puede ser **solucionado** si se utiliza la **Terminal de Windows** (con soporte directo; no confundir con **PowerShell** o **CMD**), o implementar la compatibilidad con `BASH` en las demás terminales.
+- Puede que exista la posibilidad de que el programa **no muestre el coloreado del texto como debería** en sistemas operativos **Windows** (o terminales sin soporte directo a `ANSI`). Esto puede ser **solucionado** si se utiliza la **Terminal de Windows** o una versión moderna de **PowerShell** (con soporte directo), o implementar la compatibilidad con colores `ANSI` en las demás terminales. También, puede ser solucionado usando `Git Bash`, ya que soporta los colores `ANSI` sin problemas.
 
 - Al momento de `leer una opción`, el programa leerá el **primer cáracter ingresado**. Si se **agregan más carácteres** después de eso no se considerará como un "problema", pero **tampoco se leerán**.
 - Si se **supera** el límite de la entrada del usuario (**200 carácteres máximo**), el programa no podrá interpretar más allá de lo que se ingrese.
