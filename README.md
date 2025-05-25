@@ -114,7 +114,7 @@ https://github.com/user-attachments/assets/78782ba3-b1b8-48e0-a8d9-35eb47290c73
 
 https://github.com/user-attachments/assets/673b9081-2ddf-4938-ae84-9554b7e6fd83
 
-- `Avanzar a una habitación` y `recoger un item de la habitación`:
+- `Avanzar a una habitación` y `recoger un item de la habitación` (desactualizado):
 
 https://github.com/user-attachments/assets/f7512479-e608-4d83-9852-711554da9f4c
 
