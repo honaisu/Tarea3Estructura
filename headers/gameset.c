@@ -199,6 +199,7 @@ void pantalla_jugador(Player* jugador, Map* mapa_juego) {
 
 void jugar_juego(Map* mapa_juego) {
     if (!mapa_cargado) { puts("NO SE HA CARGADO EL LABERINTO"); return; }
+    resetear_mapa(mapa_juego);
     Player* jugador = inicializar_jugador();
     es_final = 0;
     limpiar_pantalla();
