@@ -103,10 +103,11 @@ void leer_mapa_completo(Map* mapa_juego, const char es_reset) {
     IDs[posicionID] = &nuevo_nodo->ID;
     map_insert(mapa_juego, IDs[posicionID], nuevo_nodo);
   }
-  crear_conexiones(mapa_juego);
+  crear_conexiones(mapa_juego); // Crea la lista de adyacente de todos los nodos estado
   
   limpiar_pantalla();
   mapa_cargado = 1; // Verificador de que se cargó el mapa
+
   // Si la función no está en modo reset, imprime el mensaje del laberinto cargado.
   if (es_reset == 'N') imprimir_separador("El laberinto ha sido cargado!", 40);
   fclose(archivo);
