@@ -2,7 +2,7 @@
 #include "mostrar.h"
 
 // MACRO correspondiente al valor del tiempo del jugador.
-#define _TIEMPO 30 
+#define _TIEMPO 30
 // MACRO usado para mostrar el estado actual de la sala. Limpia la pantalla y muestra los datos correspondientes.
 // Sólo es usado para poder ver el estado de la sala actual del jugador.
 // El parámetro "player" se encarga de reemplazar el valor en la función para saber si es necesario mostrar datos del jugador o no.
@@ -10,56 +10,91 @@
 // MACRO encargado de la fórmula del tiempo [(Peso Total + 1) / 10].
 // Optimizado para no usar división (equivalencia de 1/10 con 0.1)
 #define FORMULA_TIEMPO (jugador->peso_total + 1) * 0.1
+// MACRO definido para poder mostrar un mensaje personalizado en las opciones con Objetos.
+// Necesita de una entrada (puntero a char para leerse), y un mensaje que cambiará la última parte de un mensaje general. 
+#define ENTRADA(entrada, mensaje) printf("Ingrese el nombre del Objeto %s: ", mensaje); leer_entrada(entrada);
 
+// Variable global que se encarga de poder ver cuando se llega al final o no.
 unsigned short es_final = 0;
 
 //--- Funciones Principales del Jugador ---//
 
+// Permite que el jugador pueda recoger un Objeto en la sala en la que se encuentre.
+// Si no nay ningún Objeto para recoger, no hace nada.
 void jugador_recoger(Player*);
+// Permite que el jugador descarte un Objeto de su inventario (mochila).
+// Si no hay ningún Objeto a descartar, no hace nada.
 void jugador_descartar(Player*);
+// Hace que el jugador pueda avanzar por las distintas salas (nodos) del laberinto.
+// Necesita que el jugador escriba el nombre de la sala correspondiente para avanzar. Si no, muestra la información de la sala y el jugador.
 void jugador_avanzar(Player*, Map*);
+// Permite poder volver a crear una partida en medio de la partida.
+// Cada vez que se resetea la partida, muestra un mensaje correspondiente a como "volver" al juego.
+// Si el jugador decide no resetear la partida, continua su partida correspondiente.
 void resetear_partida(Player*, Map*);
-void salir_partida(char*);
+// Opción que permite salir de la partida para volver a la pantalla de inicio.
+// Da la posibilidad de no salir de la partida (en caso de haber sido presionado sin querer).
+// Si se sale de la partida, se borran los datos del jugador y el mapa vuelve a su estado "default".
+void salir_partida(char*, Player*, Map*);
 
 //--- Funciones Varias del Jugador ---//
 
+// Inicializa las variables del jugador.
+// Pone los parámetros que existan dentro de la estructura del jugador en valores ceros o nulos.
 Player* inicializar_jugador(void);
+// Función que vuelve un jugador a su estado predeterminado ("default").
+// Devuelve cada parámetro del jugador a valores cero o nulo y elimina los Objetos que haya acumulado.
+// Si resulta que es primer vez que se crea al jugador (la lista de Objetos igual a nula), inicializa la lista correspondiente para ser usada.
 void jugador_default(Player*);
+// Busca un Objeto especifico por nombre (const char*) dentro de una lista de Objetos.
+// Si el Objeto existe dentro de la lista, retorna ese Objeto.
+// Si no, retorna nulo.
 Item* item_buscar(List*, const char*);
+// Actualiza (agrega o remueve) los Objetos que existan dentro del jugador.
+// El primer parámetro es el jugador, necesario para poder actualizar su lista de Objetos.
+// El segundo es la lista de Objetos a usar para agregar (o remover) un Objeto específico.
+// El tercer parámetro es el Objeto a buscar. Si no existe el Objeto, no hace nada; si existe, lo agrega o remueve del jugador y cambia su peso y puntaje total.
+// El cuarto parámetro es una constante que verifica si es que se necesita agregar o remover el Objeto al inventario del jugador.
 void jugador_actualizar_items(Player*, List*, Item*, const int);
+
+// Resetea el mapa para poder volver a ser usado en medio de la partida (casos de reinicio o salida).
+void resetear_mapa(Map*);
 
 // --- //
 
 void jugador_recoger(Player* jugador) {
     State_Map* sala = jugador->sala_actual;
-    if (list_first(sala->items) == NULL) { puts("*Intentas ver si hay items útiles en la habitación, pero no hay nada*"); return; }
-    
+    // --- Impresion --- //
+    if (list_first(sala->items) == NULL) { puts("*Intentas ver si hay Objetos útiles en la habitación, pero no hay nada*"); return; }
     mostrar_items(sala->items);
-    char entrada[100];
-    leer_entrada(entrada);
+
+    char entrada[200];
+    ENTRADA(entrada, "a recoger");
     
     Item* items_sala = item_buscar(sala->items, entrada);
-    if (items_sala == NULL) { puts("*Intentaste buscar un item que no existia en la habitación*"); return; }
+    if (items_sala == NULL) { puts("*Intentaste materializar un Objeto inexistente en la habitación*\n*No tuvo efecto*"); return; }
         
     jugador_actualizar_items(jugador, sala->items, items_sala, 1);
     return;
 }
 
 void jugador_descartar(Player* jugador) {
-    if (list_first(jugador->items) == NULL) { puts("*Intentas abrir tu mochila para descargar objetos, pero no tienes ninguno*"); return; }
-
+    // --- Impresion --- //
+    if (list_first(jugador->items) == NULL) { puts("*Intentas abrir tu mochila para descartar Objetos, pero no tienes ninguno*"); return; }
     mostrar_items(jugador->items);
+
     char entrada[200];
-    leer_entrada(entrada);
-    
+    ENTRADA(entrada, "a descartar");
+
     Item* items_jugador = item_buscar(jugador->items, entrada);
-    if (items_jugador == NULL) { puts("*Intentaste sacar un objeto que no existia en tu mochila*\n*-1 de estilo*"); return; }
+    if (items_jugador == NULL) { puts("*Intentaste sacar un Objeto que no existia en tu mochila*\n*-1 de estilo*"); return; }
         
     jugador_actualizar_items(jugador, jugador->items, items_jugador, -1);
     return;
 }
 
 void jugador_avanzar(Player* jugador, Map* mapa_juego) {
+    // --- Impresion --- //
     limpiar_pantalla();
     imprimir_separador("Decides ver las habitaciones adjuntas a la actual", 50);
     mostrar_conexiones(jugador->sala_actual->adj_nodes);
@@ -70,16 +105,13 @@ void jugador_avanzar(Player* jugador, Map* mapa_juego) {
     for (CADA_RECORRIDO(lista_conexiones, jugador->sala_actual->adj_nodes)) {
         map_insert(conexiones, lista_conexiones->nombre, lista_conexiones);
     }
-
     // --- //
     char entrada[200];
     puts("¿A qué habitación decides moverte? (Ninguna: \"0\")");
-    MapPair* a;
-    do {    
-        leer_entrada(entrada);
-        if (!strcmp(entrada, "0")) { puts("*Decides quedarte en la misma habitación*"); return; }
-    } while((a = map_search(conexiones, entrada)) == NULL);
-
+    leer_entrada(entrada);
+    MapPair* a = map_search(conexiones, entrada);
+    if (!strcmp(entrada, "0")) { puts("*Decides quedarte en la misma habitación*"); free(conexiones); return; }
+    else if (a == NULL) { puts("*Intentaste moverte a una habitación inexistente*\n*No surge efecto*"); free(conexiones); return; }
     // --- //
     limpiar_pantalla();
     jugador->sala_actual = a->value;
@@ -93,6 +125,7 @@ void jugador_avanzar(Player* jugador, Map* mapa_juego) {
     free(conexiones);
     return;
 }
+
 
 void resetear_partida(Player* jugador, Map* mapa_juego) {
     limpiar_pantalla();
@@ -109,21 +142,23 @@ void resetear_partida(Player* jugador, Map* mapa_juego) {
     }
 
     // --- //
-    map_clean(mapa_juego);
-    mapa_cargado = 0;
-    leer_mapa_completo(mapa_juego);
+    
     jugador_default(jugador);
+    resetear_mapa(mapa_juego);
     MapPair* pair = map_first(mapa_juego);
     jugador->sala_actual = pair->value;
     mostrar_reseteo();
 }
 
-void salir_partida(char* o) {
+void salir_partida(char* o, Player* jugador, Map* mapa_juego) {
     limpiar_pantalla();
     imprimir_separador("¿Estás seguro de querer salir de la partida? [S/N]", 60);
     leer_opcion(o);
     if (*o == 'S') {
         *o = '0';
+        resetear_mapa(mapa_juego);
+        jugador_default(jugador);
+        free(jugador);
         imprimir_separador("FIN DE LA PARTIDA", 60);
     } else if (*o != 'N') {
         puts("*Intentaste pensar si salir valdría la pena o no*");
@@ -139,7 +174,7 @@ void casos_opciones(char* o, Player* jugador, Map* mapa_juego) {
         case '4': { VER_ESTADO(NULL); break; }
 
         case '-': { resetear_partida(jugador, mapa_juego); break; }
-        case '0': { salir_partida(o); break; }
+        case '0': { salir_partida(o, jugador, mapa_juego); break; }
         // Respuesta predeterminada
         default: { puts("*Intentaste usar una opción no disponible*\n*No surgió efecto*"); *o = 'd'; }
     }
@@ -148,18 +183,36 @@ void casos_opciones(char* o, Player* jugador, Map* mapa_juego) {
 }
 
 void pantalla_jugador(Player* jugador, Map* mapa_juego) {
-  MapPair* pair = map_first(mapa_juego);
-  jugador->sala_actual = pair->value;
+    MapPair* pair = map_first(mapa_juego);
+    jugador->sala_actual = pair->value;
 
-  char o = '\0';
-  do {
-    mostrar_menu_jugador();
-    leer_opcion(&o);
-    casos_opciones(&o, jugador, mapa_juego);
-  } while (o != '0' && jugador->tiempo > 0 && !es_final);
+    char o = '\0';
+    do {
+        mostrar_menu_jugador();
+        leer_opcion(&o);
+        casos_opciones(&o, jugador, mapa_juego);
+    } while (o != '0' && jugador->tiempo > 0 && !es_final);
 
-  if (!(jugador->tiempo > 0)) mostrar_mensaje_derrota();
-  return;
+    if (!(jugador->tiempo > 0)) mostrar_mensaje_derrota();
+    return;
+}
+
+void jugar_juego(Map* mapa_juego) {
+    if (!mapa_cargado) { puts("NO SE HA CARGADO EL LABERINTO"); return; }
+    Player* jugador = inicializar_jugador();
+    es_final = 0;
+    limpiar_pantalla();
+    mostrar_historia();
+    pantalla_jugador(jugador, mapa_juego);
+    return;
+}
+
+// --- //
+
+void resetear_mapa(Map* mapa_juego) {
+    map_clean(mapa_juego);
+    mapa_cargado = 0;
+    leer_mapa_completo(mapa_juego, 'S');
 }
 
 Item* item_buscar(List* items, const char* nombre) {
@@ -192,16 +245,4 @@ Player* inicializar_jugador(void) {
     nuevo_jugador->items = NULL;
     jugador_default(nuevo_jugador);
     return nuevo_jugador;
-}
-
-void jugar_juego(Map* mapa_juego) {
-    if (!mapa_cargado) { puts("NO SE HA CARGADO EL LABERINTO"); return; }
-    Player* jugador = inicializar_jugador();
-
-    limpiar_pantalla();
-    mostrar_historia();
-    pantalla_jugador(jugador, mapa_juego);
-    jugador_default(jugador);
-    free(jugador);
-    return;
 }

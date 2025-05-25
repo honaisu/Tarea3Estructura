@@ -7,6 +7,7 @@
 // Lista, que recibe una lista que quiere ser recorrida hasta acabar sus elementos.
 #define CADA_RECORRIDO(valor, lista) valor = list_first(lista); valor != NULL; valor = list_next(lista)
 
+// Variable global externa. Usada para verificar si el mapa fue cargado o no.
 extern unsigned short mapa_cargado; 
 
 // Estructura que guarda los elementos (nombre, valor y peso) de los Objetos.
@@ -29,7 +30,7 @@ typedef struct State_Map{
 } State_Map;
 
 // Función que se encarga de leer un archivo CSV y generar un mapa con las salas (nodos) correspondientes.
-// Recibe de parámetro un mapa que guardará todos los nodos que se generen.
-void leer_mapa_completo(Map*);
+// Recibe de parámetro un mapa que guardará todos los nodos que se generen, y otro parámetro que corresponde a si es parte del modo reset o no.
+void leer_mapa_completo(Map*, const char);
 
 #endif
