@@ -22,8 +22,10 @@ void jugador_recoger(Player*);
 // Si no hay ningún Objeto a descartar, no hace nada.
 void jugador_descartar(Player*);
 // Hace que el jugador pueda avanzar por las distintas salas (nodos) del laberinto.
-// Necesita que el jugador escriba el nombre de la sala correspondiente para avanzar. Si no, muestra la información de la sala y el jugador.
-void jugador_avanzar(Player*, Map*);
+// Necesita que el jugador escriba la dirección de la sala correspondiente para avanzar.
+// Si el jugador no hace nada, se mantiene en la misma habitación.
+// Cada vez que se avanza a una habitación, se restará tiempo del jugador en base a la fórmula del tiempo (MACRO).
+void jugador_avanzar(Player*);
 // Permite poder volver a crear una partida en medio de la partida.
 // Cada vez que se resetea la partida, muestra un mensaje correspondiente a como "volver" al juego.
 // Si el jugador decide no resetear la partida, continua su partida correspondiente.
@@ -91,37 +93,62 @@ void jugador_descartar(Player* jugador) {
     return;
 }
 
-void jugador_avanzar(Player* jugador, Map* mapa_juego) {
+void jugador_avanzar(Player* jugador) {
     // --- Impresion --- //
     limpiar_pantalla();
     imprimir_separador("Decides ver las habitaciones adjuntas a la actual", 50);
-    mostrar_conexiones(jugador->sala_actual->adj_nodes);
     // --- //
-    
-    // Un mapa creado sólo para poder buscar la sala por nombre en vez de ID
-    Map* conexiones = map_create(is_equal_str);
-    // Lista de las salas adyacentes a la actual del jugador
-    State_Map* lista_conexiones; 
-    for (CADA_RECORRIDO(lista_conexiones, jugador->sala_actual->adj_nodes)) {
-        map_insert(conexiones, lista_conexiones->nombre, lista_conexiones);
+
+    const char* direcciones[4] = {"Arriba", "Abajo", "Izquierda", "Derecha"};
+    State_Map* sala = jugador->sala_actual;
+    State_Map* adyacente = NULL;
+    int direccion_deseada = -1;
+
+    // Mostrará las direcciones posibles
+    for (int i = 0, limite = 0; i < 4; i++) {
+        if (sala->direcciones[i] == -1) continue; // NULA
+        
+        adyacente = list_first(sala->adj_nodes);
+        // Irá recorriendo los nodos adyacentes
+        // Limite es una variable que hará que avance a la posición deseada (la dirección correcta)
+        // EJ: k < 2 ... sala 1 -> sala 2 -> *sala 3* (IZQUIERDA)
+        for (int k = 0; k < limite; k++) adyacente = list_next(sala->adj_nodes);
+        // Imprime la dirección y el nombre de la sala adyacente.
+        printf("   -> %s: \033[1;37m%s\033[0m\n", direcciones[i], adyacente->nombre);
+        ++(limite);
     }
     // --- //
+
     char entrada[200];
-    puts("¿A qué habitación decides moverte? (Ninguna: \"0\")");
+    puts("¿A qué dirección decides moverte? (Ninguna: \"0\")");
     leer_entrada(entrada);
+
+    if (!strcmp(entrada, "0")) { puts("*Decides quedarte en la misma habitación*"); return; }
+
+    // Buscar dirección ingresada
+    // Buscará la dirección de la sala a buscar
+    for (int i = 0; i < 4; i++) {
+        if (sala->direcciones[i] == -1) continue; // NULA (OMITIR)
+        if (strcmp(entrada, direcciones[i]) != 0) continue; // No es el mismo nombre (OMITIR)
+        
+        direccion_deseada = i;
+        break;
+    }
     // --- //
-    MapPair* a = map_search(conexiones, entrada); // Mal nombre pero no se me ocurrió otro xd
-    free(conexiones); // Elimina el mapa de conexiones apenas encuentra (no es necesario) 
-    // --- //
-    // En caso de quedarse en la habitación o que la búsqueda haya sido nula, retorna.
-    if (!strcmp(entrada, "0")) { puts("*Decides quedarte en la misma habitación*"); return; } 
-    else if (a == NULL) { puts("*Intentaste moverte a una habitación inexistente*\n*No surge efecto*"); return; }
-    // --- //
+
+    if (direccion_deseada == -1) { puts("*Intentaste moverte a una dirección inexistente*\n*No surge efecto*"); return; }
+
+    // Encontrar la sala del jugador
+    adyacente = list_first(sala->adj_nodes);
+    for (int i = 0; i < 4; i++) {
+        if (sala->direcciones[i] == -1) continue; // NULA
+        
+        if (i == direccion_deseada) break; // Si llega a la dirección deseada, termina el ciclo
+        adyacente = list_next(sala->adj_nodes);
+    }
+    jugador->sala_actual = adyacente; // El nodo de la lista recorrida con la dirección correcta será la sala actual.
 
     limpiar_pantalla();
-    // Si se encuentra la sala a la que se desea mover, la sala actual del jugador será la nueva.
-    jugador->sala_actual = a->value; 
-
     if (jugador->sala_actual->final == 'S') { // En caso de que la habitación sea final.
         mostrar_mensaje_final(jugador);
         es_final = 1;
@@ -192,7 +219,7 @@ void casos_opciones(char* o, Player* jugador, Map* mapa_juego) {
         // Descartar Item(s)
         case '2': { jugador_descartar(jugador); break; }
         // Avanzar a una habitación
-        case '3': { jugador_avanzar(jugador, mapa_juego); break; }
+        case '3': { jugador_avanzar(jugador); break; }
         // Ver estado de la habitación
         case '4': { mostrar_estado_actual(NULL, jugador->sala_actual); break; }
         // Ver estado del jugador
