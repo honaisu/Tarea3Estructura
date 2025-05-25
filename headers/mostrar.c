@@ -12,7 +12,7 @@
 
 void mostrar_items(List* items) {
   if (list_first(items) == NULL) return;
-  puts("\033[1;35mITEMS:\033[0m");
+  puts("\033[1;35mOBJETOS:\033[0m");
   Item* item;
   for(CADA_RECORRIDO(item, items)) {
     printf("   -> %s (%d pts, %d kg)\n", item->nombre, item->valor, item->peso);
